@@ -1,0 +1,14 @@
+{
+    "name": "autolog",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "watch": "npx @tailwindcss/cli -i ./static/css/base.css -o ./static/css/output.css --watch"
+    },
+    "devDependencies": {
+        "tailwindcss": "^4.2.4"
+    },
+    "dependencies": {
+        "@tailwindcss/cli": "^4.2.4"
+    }
+}
