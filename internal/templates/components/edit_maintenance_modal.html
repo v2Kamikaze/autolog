@@ -1,0 +1,160 @@
+{{/*
+    edit_maintenance_modal
+
+    Maintenance edit modal using native <dialog>.
+
+    Features:
+    - openEditMaintenanceModal({ id, carId, name, date, km, cost }): opens the modal
+    - closeEditMaintenanceModal(): closes the modal
+    - Auto closes on successful Turbo submit
+    - Resets form on success
+    - Loading state during request (disabled submit + spinner)
+
+    Form:
+    - method: PUT
+    - action: /cars/{carId}/maintenances/{maintenanceId}
+
+    Fields:
+    - name: string (required)
+    - date: date (required)
+    - km: number (required)
+    - cost: number (required)
+*/}}
+
+{{ define "edit_maintenance_modal" }}
+
+<dialog id="edit-maintenance-modal" class="p-0 border-none backdrop:bg-black/50 m-auto">
+
+    <div class="w-2xl p-4 bg-white relative">
+
+        <!-- X BUTTON -->
+        <button
+            type="button"
+            onclick="closeEditMaintenanceModal()"
+            class="absolute top-3 right-3 text-gray-500 hover:text-black cursor-pointer"
+        >
+            {{ template "icon_x" "w-5 h-5" }}
+        </button>
+
+        <h2 class="text-lg font-semibold mb-4">Editar Manutenção</h2>
+
+        <form
+            id="edit-maintenance-form"
+            method="PUT"
+
+            x-data="{
+                loading: false,
+                cents: 0
+            }"
+
+            x-on:turbo:submit-start="loading = true"
+
+            x-on:turbo:submit-end="
+                loading = false;
+                if (event.detail.success) {
+                    $el.reset();
+                    closeEditMaintenanceModal();
+                }
+            "
+        >
+
+            <!-- NAME -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">Nome</label>
+                <input name="name" required class="w-full border-b border-gray-300 py-1">
+            </div>
+
+            <!-- DATE -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">Data</label>
+                <input type="date" name="date" required class="w-full border-b border-gray-300 py-1">
+            </div>
+
+            <!-- KM -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">KM</label>
+                <input type="number" name="km" required class="w-full border-b border-gray-300 py-1">
+            </div>
+
+            <!-- COST -->
+            <div class="mb-4" x-ref="costWrapper">
+                <label class="block text-sm font-medium mb-1">Valor</label>
+
+                <input
+                    type="text"
+                    inputmode="numeric"
+                    id="edit-cost-display"
+                    placeholder="R$ 0,00"
+                    x-on:input="cents = formatMaintenanceCostInput($event.target)"
+                    class="w-full border-b border-gray-300 py-1 focus:outline-none focus:border-black"
+                />
+
+                <input type="hidden" name="cost" x-model="cents" />
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="flex justify-end gap-2 mt-6">
+
+                <button
+                    type="button"
+                    onclick="closeEditMaintenanceModal()"
+                    class="border border-gray-300 px-4 py-2 text-sm hover:border-black cursor-pointer transition"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="submit"
+                    x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }"
+                    class="border border-black px-4 py-2 text-sm hover:bg-black hover:text-white cursor-pointer transition flex items-center gap-2"
+                >
+                    <span x-show="loading" class="inline-flex shrink-0">{{ template "icon_loader" "w-4 h-4 animate-spin" }}</span>
+                    <span x-text="loading ? 'Salvando...' : 'Salvar'"></span>
+                </button>
+
+            </div>
+        </form>
+    </div>
+
+</dialog>
+
+<script>
+    function openEditMaintenanceModal({ id, carId, name, date, km, cost }) {
+        const modal = document.getElementById('edit-maintenance-modal');
+        const form = document.getElementById('edit-maintenance-form');
+
+        form.action = `/cars/${carId}/maintenances/${id}`;
+
+        form.querySelector('input[name="name"]').value = name;
+        form.querySelector('input[name="date"]').value = date;
+        form.querySelector('input[name="km"]').value = km;
+
+        const formXData = Alpine.$data(form);
+        formXData.cents = cost;
+
+        const input = form.querySelector('#edit-cost-display');
+
+        input.value = formatCostDisplay(cost);
+
+        modal.showModal();
+    }
+
+    function closeEditMaintenanceModal() {
+        document.getElementById('edit-maintenance-modal').close()
+    }
+
+    function formatCostDisplay(cost) {
+        return 'R$ ' + (cost / 100).toFixed(2)
+            .replace('.', ',')
+            .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    }
+
+    function formatMaintenanceCostInput(input) {
+        const raw = input.value.replace(/\D/g, '')
+        const cents = raw ? parseInt(raw, 10) : 0
+        input.value = formatCostDisplay(cents)
+        return cents
+    }
+</script>
+
+{{ end }}

@@ -1,0 +1,21 @@
+{{ define "add_maintenance_list_item_response" }}
+
+{{ $maintenance := .Maintenance }}
+
+{{ $totalCost := .TotalCost }}
+
+{{ $carId := .CarID }}
+
+<turbo-stream action="append" target="maintenances-list-{{ $carId }}">
+    <template>
+        {{ template "maintenance_list_item" $maintenance }}
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="total-cost-{{ $carId }}">
+    <template>
+        Total: {{ FmtCurrency $totalCost }}
+    </template>
+</turbo-stream>
+
+{{ end }}

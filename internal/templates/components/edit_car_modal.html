@@ -1,0 +1,125 @@
+{{/*
+    edit_car_modal
+
+    Car edit modal using native <dialog>.
+
+    Features:
+    - openEditCarModal({ id, title, km }): opens the modal
+    - closeEditCarModal(): closes the modal
+    - Auto closes on successful Turbo submit
+    - Resets form on success
+    - Loading state during request (disabled submit + spinner)
+
+    Form:
+    - method: PUT
+    - action: /cars/{id}
+
+    Fields:
+    - title: string (required)
+    - km: number (required)
+*/}}
+
+
+{{ define "edit_car_modal" }}
+
+<dialog id="edit-car-modal" class="p-0 border-none backdrop:bg-black/50 m-auto">
+
+    <div class="w-2xl p-4 bg-white relative">
+
+        <!-- X BUTTON -->
+        <button
+            type="button"
+            onclick="closeEditCarModal()"
+            class="absolute top-3 right-3 text-gray-500 hover:text-black cursor-pointer"
+        >
+            {{ template "icon_x" "w-5 h-5" }}
+        </button>
+
+        <h2 class="text-lg font-semibold mb-4">Editar Veículo</h2>
+
+        <form
+            id="edit-car-form"
+            method="PUT"
+            action="/cars"
+
+            x-data="{ loading: false }"
+
+            x-on:turbo:submit-start="loading = true"
+
+            x-on:turbo:submit-end="
+                loading = false;
+
+                if (event.detail.success) {
+                    $el.reset();
+                    closeEditCarModal();
+                }
+            "
+        >
+
+            <!-- TITLE -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">Título</label>
+                <input
+                    name="title"
+                    required
+                    class="w-full border-b border-gray-300 py-1 focus:outline-none focus:border-black"
+                >
+            </div>
+
+            <!-- KM -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">KM</label>
+                <input
+                    type="number"
+                    name="km"
+                    required
+                    class="w-full border-b border-gray-300 py-1 focus:outline-none focus:border-black"
+                >
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="flex justify-end gap-2 mt-6">
+
+                <button
+                    type="button"
+                    onclick="closeEditCarModal()"
+                    class="border border-gray-300 px-4 py-2 text-sm hover:border-black cursor-pointer transition"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="submit"
+                    x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }"
+                    class="border border-black px-4 py-2 text-sm hover:bg-black hover:text-white cursor-pointer transition flex items-center gap-2"
+                >
+                    <span x-show="loading" class="inline-flex shrink-0">{{ template "icon_loader" "w-4 h-4 animate-spin" }}</span>
+                    <span x-text="loading ? 'Editando...' : 'Editar'"></span>
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</dialog>
+
+<script>
+    function openEditCarModal({ id, title, km }) {
+        const modal = document.getElementById('edit-car-modal')
+        const form = document.getElementById('edit-car-form')
+
+        form.action = `/cars/${id}`
+
+        form.querySelector('input[name="title"]').value = title
+        form.querySelector('input[name="km"]').value = km
+        modal.showModal()
+    }
+
+    function closeEditCarModal() {
+        document.getElementById('edit-car-modal').close()
+    }
+</script>
+
+{{ end }}

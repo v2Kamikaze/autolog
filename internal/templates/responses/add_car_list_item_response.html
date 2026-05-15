@@ -1,0 +1,11 @@
+{{ define "add_car_list_item_response" }}
+
+{{ $car := .Car }}
+
+<turbo-stream action="append" target="cars-list">
+    <template>
+        {{ template "car_list_item" $car }}
+    </template>
+</turbo-stream>
+
+{{ end }}

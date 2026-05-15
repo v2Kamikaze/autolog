@@ -1,0 +1,93 @@
+{{ define "car_list_item" }}
+
+{{ $car := . }}
+
+<div id="cars-list-item-{{ $car.ID }}" x-data="{ open: false }" class="border border-gray-300 animate-slide-up">
+
+    <!-- HEADER -->
+    <div class="p-4 flex justify-between items-center hover:border-black transition">
+
+        <!-- esquerda -->
+        <div class="flex gap-4 items-center">
+            <img src="https://placehold.co/600x400" class="w-30 h-20 object-cover border border-gray-300" />
+
+            <div>
+                <p class="font-medium flex items-center gap-2">
+                    {{ template "icon_car" "w-4 h-4 text-gray-500" }}
+                    <span>{{ $car.Title }}</span>
+                </p>
+
+                <p class="text-sm text-gray-600 mt-1 flex items-center gap-1">
+                    {{ template "icon_gauge" "w-4 h-4" }}
+                    <span>{{ $car.KM }} km</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- direita -->
+        <div class="flex items-center gap-3">
+
+            <!-- ações -->
+            <div class="flex items-center gap-2">
+
+                <button
+                    x-on:click="openAddMaintenanceModal({{ $car.ID }})"
+                    class="bg-transparent border border-gray-300 p-1 hover:border-black hover:bg-black hover:text-white hover:cursor-pointer transition"
+                >
+                    {{ template "icon_plus" "w-4 h-4" }}
+                </button>
+
+                <button
+                    x-on:click="openEditCarModal({ id: {{ $car.ID }}, title: '{{ $car.Title }}', km: {{ $car.KM }} })"
+                    class="bg-transparent border border-gray-300 p-1 hover:border-black hover:bg-black hover:text-white hover:cursor-pointer transition"
+                >
+                    {{ template "icon_edit" "w-4 h-4" }}
+                </button>
+
+                <button
+                    x-on:click="openDeleteCarModal({{ $car.ID }})"
+                    class="bg-red-600 p-1 hover:border-black hover:bg-black text-white hover:cursor-pointer transition"
+                >
+                    {{ template "icon_thrash" "w-4 h-4" }}
+                </button>
+
+                <button
+                    x-on:click="open = !open"
+                    class="bg-transparent border border-gray-300 p-1 hover:border-black hover:bg-black hover:text-white hover:cursor-pointer transition"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="w-4 h-4 transition-transform shrink-0"
+                        :class="open ? 'rotate-180' : ''"
+                        aria-hidden="true">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div
+        x-show="open"
+        x-cloak
+        x-transition
+        class="border-t border-gray-300 p-4 bg-gray-50"
+    >
+
+        {{ template "maintenance_list" $car }}
+
+        <div id="total-cost-{{ $car.ID }}" class="mt-4 pt-3 border-t text-xs text-gray-600 flex justify-end">
+            Total: {{ FmtCurrency $car.TotalCost }}
+        </div>
+
+    </div>
+
+</div>
+
+{{ end }}

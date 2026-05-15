@@ -1,0 +1,17 @@
+{{ define "car_list" }}
+
+{{ $cars := . }}
+
+<div id="cars-list" class="space-y-3">
+    {{ if $cars}}
+        {{ range $cars }}
+            {{ template "car_list_item" . }}
+        {{ end }}
+    {{ else }}
+        <p class="text-sm text-gray-500">
+            Ainda não possui nenhum veículo registrado.
+        </p>
+    {{ end }}
+</div>
+
+{{ end }}

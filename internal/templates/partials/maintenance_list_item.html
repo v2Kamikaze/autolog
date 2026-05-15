@@ -1,0 +1,30 @@
+{{ define "maintenance_list_item" }}
+
+{{ $maintenance := . }}
+
+<li id="maintenances-list-item-{{ $maintenance.ID }}" class="grid grid-cols-5 px-1 items-center">
+    <span>{{ $maintenance.Name }}</span>
+    <span>{{ FmtDate $maintenance.Date }}</span>
+    <span>{{ $maintenance.KM }} km</span>
+    <span class="text-right">{{ FmtCurrency $maintenance.Cost }}</span>
+    <div class="flex justify-end items-center gap-2">
+        <button
+            x-on:click="openEditMaintenanceModal({
+                id: {{ $maintenance.ID }},
+                carId: {{ $maintenance.CarID }},
+                name: '{{ $maintenance.Name }}',
+                date: '{{ ToDate $maintenance.Date }}',
+                km: {{ $maintenance.KM }},
+                cost: {{ $maintenance.Cost }}
+            })"
+            class="bg-transparent border p-1 mb-1 border-black hover:bg-black hover:text-white hover:cursor-pointer transition">
+            {{ template "icon_edit" "w-4 h-4" }}
+        </button>
+
+        <button x-on:click="openDeleteMaintenanceModal({{ $maintenance.CarID }}, {{ $maintenance.ID }})" class="bg-red-600 p-1 mb-1 hover:border-black hover:bg-black text-white hover:cursor-pointer transition">
+            {{ template "icon_thrash" "w-4 h-4" }}
+        </button>
+    </div>
+</li>
+
+{{ end }}

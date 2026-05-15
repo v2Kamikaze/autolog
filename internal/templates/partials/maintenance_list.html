@@ -1,0 +1,27 @@
+{{ define "maintenance_list" }}
+
+{{ $car := . }}
+{{ $maintenances := $car.Maintenances }}
+
+<div>
+    <div class="grid grid-cols-5 text-xs text-gray-500 mb-2 px-1">
+        <span>Serviço</span>
+        <span>Data</span>
+        <span>KM</span>
+        <span class="text-right">Valor</span>
+        <span class="text-right">Ações</span>
+    </div>
+
+    <ul id="maintenances-list-{{ $car.ID }}" class="space-y-4 text-sm divide-y divide-gray-300">
+        {{ if $maintenances }}
+            {{ range $maintenances }}
+                {{ template "maintenance_list_item" . }}
+            {{ end }}
+        {{ else }}
+            <p class="text-sm text-gray-500">
+                Sem registros de manutenção
+            </p>
+        {{ end }}
+    </ul>
+</div>
+{{ end }}
