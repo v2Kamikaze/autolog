@@ -2,6 +2,34 @@
 
 {{ $cars := .Cars }}
 
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('ui_component_modal', (modalId) => ({
+        modalId,
+        isOpen: false,
+        data: {},
+
+        init() {
+            window.addEventListener('open-modal', (event) => {
+                if (event.detail?.modalId === this.modalId) {
+                    this.open(event.detail)
+                }
+            })
+        },
+
+        open(data = {}) {
+            this.isOpen = true
+            this.data = data
+        },
+
+        close() {
+            this.isOpen = false
+            this.data = {}
+        },
+    }))
+})
+</script>
+
 <header class="mb-8 flex items-center justify-between border-b pb-4">
     <div>
         <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2">
@@ -14,7 +42,8 @@
     </div>
 
     <button
-        onclick="openAddCarModal()"
+        x-data
+        x-on:click="$dispatch('open-modal', { modalId: 'add-car' })"
         class="border border-black px-4 py-2 text-sm hover:bg-black hover:text-white hover:cursor-pointer transition flex items-center gap-2"
     >
         {{ template "icon_plus" "w-4 h-4" }}
@@ -25,15 +54,10 @@
 {{ template "car_list" $cars }}
 
 {{ template "add_car_modal" }}
-
 {{ template "add_maintenance_modal" }}
-
 {{ template "edit_car_modal" }}
-
 {{ template "edit_maintenance_modal" }}
-
 {{ template "delete_car_modal" }}
-
 {{ template "delete_maintenance_modal" }}
 
 {{ end }}

@@ -1,13 +1,12 @@
 {{/*
     delete_car_modal
 
-    Car deletion modal using native <dialog>.
+    Car deletion modal using ui_component_modal.
 
     Features:
-    - openDeleteCarModal(carId): opens modal and sets form action
-    - closeDeleteCarModal(): closes the modal
+    - Opens via: $dispatch('open-modal', { modalId: 'delete-car', carId })
+    - Closes via: close()
     - Auto closes on successful Turbo submit
-    - Resets form on success
     - Loading state during request (disabled submit + spinner)
 
     Form:
@@ -17,86 +16,84 @@
 
 {{ define "delete_car_modal" }}
 
-<dialog
-    id="delete-car-modal"
-    oncancel="closeDeleteCarModal()"
-    class="p-0 border-none backdrop:bg-black/50 m-auto"
+<div
+    x-data="ui_component_modal('delete-car')"
+    x-show="isOpen"
+    x-transition
+    class="fixed inset-0 flex items-center justify-center"
 >
-    <div class="w-xl p-4 bg-white relative">
 
-        <!-- X BUTTON -->
-        <button
-            type="button"
-            onclick="closeDeleteCarModal()"
-            class="absolute top-3 right-3 text-gray-500 hover:text-black cursor-pointer"
+    <!-- OVERLAY -->
+    <div
+        class="absolute inset-0 bg-black/50"
+        x-on:click="close()"
+    ></div>
+        <!-- MODAL -->
+        <div
+            class="relative w-2xl p-4 bg-white"
+            x-on:click.stop
         >
-            {{ template "icon_x" "w-5 h-5" }}
-        </button>
+            <!-- X BUTTON -->
+            <button
+                type="button"
+                x-on:click="close()"
+                class="absolute top-3 right-3 text-gray-500 hover:text-black cursor-pointer"
+            >
+                {{ template "icon_x" "w-5 h-5" }}
+            </button>
 
-        <h2 class="text-lg font-semibold mb-4">Excluir carro</h2>
+            <h2 class="text-lg font-semibold mb-4">Excluir carro</h2>
+            <p class="text-gray-600 mb-4" x-text="`${data.title} (${data.km} km)`"></p>
 
-        <form
-            id="delete-car-form"
-            method="DELETE"
+            <form
+                id="delete-car-form"
+                method="DELETE"
 
-            x-data="{ loading: false }"
+                x-data="{ loading: false }"
 
-            x-on:turbo:submit-start="loading = true"
+                x-bind:action="`/cars/${data.carId}`"
 
-            x-on:turbo:submit-end="
-                loading = false;
+                x-on:turbo:submit-start="loading = true"
 
-                if (event.detail.success) {
-                    $el.reset();
-                    closeDeleteCarModal();
-                }
-            "
-        >
+                x-on:turbo:submit-end="
+                    loading = false;
 
-            <!-- ACTIONS -->
-            <div class="flex justify-end gap-2 mt-6">
+                    if (event.detail.success) {
+                        close();
+                    }
+                "
+            >
 
-                <!-- CANCEL -->
-                <button
-                    type="button"
-                    onclick="closeDeleteCarModal()"
-                    class="border border-gray-300 px-4 py-2 text-sm hover:border-black cursor-pointer transition"
-                >
-                    Cancelar
-                </button>
+                <!-- ACTIONS -->
+                <div class="flex justify-end gap-2 mt-6">
 
-                <!-- SUBMIT -->
-                <button
-                    type="submit"
-                    x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }"
-                    class="bg-red-600 text-white px-4 py-2 text-sm hover:bg-black hover:text-white cursor-pointer transition flex items-center gap-2"
-                >
-                    <span x-show="loading" class="inline-flex shrink-0">
-                        {{ template "icon_loader" "w-4 h-4 animate-spin" }}
-                    </span>
+                    <!-- CANCEL -->
+                    <button
+                        type="button"
+                        x-on:click="close()"
+                        class="border border-gray-300 px-4 py-2 text-sm hover:border-black cursor-pointer transition"
+                    >
+                        Cancelar
+                    </button>
 
-                    <span x-text="loading ? 'Excluindo...' : 'Excluir'"></span>
-                </button>
+                    <!-- SUBMIT -->
+                    <button
+                        type="submit"
+                        x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }"
+                        class="bg-red-600 text-white px-4 py-2 text-sm hover:bg-black hover:text-white cursor-pointer transition flex items-center gap-2"
+                    >
+                        <span x-show="loading" class="inline-flex shrink-0">
+                            {{ template "icon_loader" "w-4 h-4 animate-spin" }}
+                        </span>
 
-            </div>
+                        <span x-text="loading ? 'Excluindo...' : 'Excluir'"></span>
+                    </button>
 
-        </form>
+                </div>
 
+            </form>
+        </div>
     </div>
-</dialog>
-
-<script>
-    function openDeleteCarModal(carId) {
-        const modal = document.getElementById('delete-car-modal')
-        const form = document.getElementById('delete-car-form')
-
-        form.action = `/cars/${carId}`
-        modal.showModal()
-    }
-
-    function closeDeleteCarModal() {
-        document.getElementById('delete-car-modal').close()
-    }
-</script>
+</div>
 
 {{ end }}

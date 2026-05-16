@@ -1,13 +1,12 @@
 {{/*
     delete_maintenance_modal
 
-    Maintenance deletion modal using native <dialog>.
+    Maintenance deletion modal using ui_component_modal.
 
     Features:
-    - openDeleteMaintenanceModal(carId, maintenanceId): opens modal and sets form action
-    - closeDeleteMaintenanceModal(): closes the modal
+    - Opens via: $dispatch('open-modal', { modalId: 'delete-maintenance', carId, maintenanceId, name })
+    - Closes via: close()
     - Auto closes on successful Turbo submit
-    - Resets form on success
     - Loading state during request (disabled submit + spinner)
 
     Form:
@@ -17,29 +16,43 @@
 
 {{ define "delete_maintenance_modal" }}
 
-<dialog
-    id="delete-maintenance-modal"
-    oncancel="closeDeleteMaintenanceModal()"
-    class="p-0 border-none backdrop:bg-black/50 m-auto"
+<div
+    x-data="ui_component_modal('delete-maintenance')"
+    x-show="isOpen"
+    x-transition
+    class="fixed inset-0 flex items-center justify-center"
 >
-    <div class="w-xl p-4 bg-white relative">
 
+    <!-- OVERLAY -->
+    <div
+        class="absolute inset-0 bg-black/50"
+        x-on:click="close()"
+    ></div>
+
+    <!-- MODAL -->
+    <div
+        class="relative w-2xl p-4 bg-white"
+        x-on:click.stop
+    >
         <!-- X BUTTON -->
         <button
             type="button"
-            onclick="closeDeleteMaintenanceModal()"
+            x-on:click="close()"
             class="absolute top-3 right-3 text-gray-500 hover:text-black cursor-pointer"
         >
             {{ template "icon_x" "w-5 h-5" }}
         </button>
 
         <h2 class="text-lg font-semibold mb-4">Excluir manutenção</h2>
+        <p class="text-gray-600 mb-4" x-text="`${data.name} (${data.date}) - ${data.km} km - ${(data.cost / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`"></p>
 
         <form
             id="delete-maintenance-form"
             method="DELETE"
 
             x-data="{ loading: false }"
+
+            x-bind:action="`/cars/${data.carId}/maintenances/${data.maintenanceId}`"
 
             x-on:turbo:submit-start="loading = true"
 
@@ -48,7 +61,7 @@
 
                 if (event.detail.success) {
                     $el.reset();
-                    closeDeleteMaintenanceModal();
+                    close();
                 }
             "
         >
@@ -59,7 +72,7 @@
                 <!-- CANCEL -->
                 <button
                     type="button"
-                    onclick="closeDeleteMaintenanceModal()"
+                    x-on:click="close()"
                     class="border border-gray-300 px-4 py-2 text-sm hover:border-black cursor-pointer transition"
                 >
                     Cancelar
@@ -83,20 +96,6 @@
         </form>
 
     </div>
-</dialog>
-
-<script>
-    function openDeleteMaintenanceModal(carId, maintenanceId) {
-        const modal = document.getElementById('delete-maintenance-modal')
-        const form = document.getElementById('delete-maintenance-form')
-
-        form.action = `/cars/${carId}/maintenances/${maintenanceId}`
-        modal.showModal()
-    }
-
-    function closeDeleteMaintenanceModal() {
-        document.getElementById('delete-maintenance-modal').close()
-    }
-</script>
+</div>
 
 {{ end }}

@@ -1,11 +1,14 @@
 {{/*
     edit_car_modal
 
-    Car edit modal using native <dialog>.
+    Car edit modal using Alpine ui_component_modal.
 
     Features:
-    - openEditCarModal({ id, title, km }): opens the modal
-    - closeEditCarModal(): closes the modal
+    - Opens via: $dispatch('open-modal', { id: 'edit-car', carId, title, km })
+    - Receives data via event payload
+    - Auto fills form fields (title, km)
+    - Dynamic form action: /cars/{id}
+    - Closes via: close()
     - Auto closes on successful Turbo submit
     - Resets form on success
     - Loading state during request (disabled submit + spinner)
@@ -19,17 +22,31 @@
     - km: number (required)
 */}}
 
-
 {{ define "edit_car_modal" }}
 
-<dialog id="edit-car-modal" class="p-0 border-none backdrop:bg-black/50 m-auto">
+<div
+    x-data="ui_component_modal('edit-car')"
+    x-show="isOpen"
+    x-transition
+    class="fixed inset-0 flex items-center justify-center"
+>
 
-    <div class="w-2xl p-4 bg-white relative">
+    <!-- OVERLAY -->
+    <div
+        class="absolute inset-0 bg-black/50"
+        x-on:click="close()"
+    ></div>
+
+    <!-- MODAL -->
+    <div
+        class="relative w-2xl p-4 bg-white"
+        x-on:click.stop
+    >
 
         <!-- X BUTTON -->
         <button
             type="button"
-            onclick="closeEditCarModal()"
+            x-on:click="close()"
             class="absolute top-3 right-3 text-gray-500 hover:text-black cursor-pointer"
         >
             {{ template "icon_x" "w-5 h-5" }}
@@ -38,11 +55,10 @@
         <h2 class="text-lg font-semibold mb-4">Editar Veículo</h2>
 
         <form
-            id="edit-car-form"
             method="PUT"
-            action="/cars"
-
             x-data="{ loading: false }"
+
+            x-bind:action="`/cars/${data.carId}`"
 
             x-on:turbo:submit-start="loading = true"
 
@@ -51,7 +67,7 @@
 
                 if (event.detail.success) {
                     $el.reset();
-                    closeEditCarModal();
+                    close();
                 }
             "
         >
@@ -62,6 +78,7 @@
                 <input
                     name="title"
                     required
+                    x-bind:value="data.title || ''"
                     class="w-full border-b border-gray-300 py-1 focus:outline-none focus:border-black"
                 >
             </div>
@@ -73,6 +90,7 @@
                     type="number"
                     name="km"
                     required
+                    x-bind:value="data.km || ''"
                     class="w-full border-b border-gray-300 py-1 focus:outline-none focus:border-black"
                 >
             </div>
@@ -82,7 +100,7 @@
 
                 <button
                     type="button"
-                    onclick="closeEditCarModal()"
+                    x-on:click="close()"
                     class="border border-gray-300 px-4 py-2 text-sm hover:border-black cursor-pointer transition"
                 >
                     Cancelar
@@ -93,7 +111,9 @@
                     x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }"
                     class="border border-black px-4 py-2 text-sm hover:bg-black hover:text-white cursor-pointer transition flex items-center gap-2"
                 >
-                    <span x-show="loading" class="inline-flex shrink-0">{{ template "icon_loader" "w-4 h-4 animate-spin" }}</span>
+                    <span x-show="loading" class="inline-flex shrink-0">
+                        {{ template "icon_loader" "w-4 h-4 animate-spin" }}
+                    </span>
                     <span x-text="loading ? 'Editando...' : 'Editar'"></span>
                 </button>
 
@@ -103,23 +123,6 @@
 
     </div>
 
-</dialog>
-
-<script>
-    function openEditCarModal({ id, title, km }) {
-        const modal = document.getElementById('edit-car-modal')
-        const form = document.getElementById('edit-car-form')
-
-        form.action = `/cars/${id}`
-
-        form.querySelector('input[name="title"]').value = title
-        form.querySelector('input[name="km"]').value = km
-        modal.showModal()
-    }
-
-    function closeEditCarModal() {
-        document.getElementById('edit-car-modal').close()
-    }
-</script>
+</div>
 
 {{ end }}

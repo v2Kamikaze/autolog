@@ -1,14 +1,15 @@
 {{/*
     add_maintenance_modal
 
-    Maintenance creation modal using native <dialog>.
+    Maintenance creation modal using Alpine ui_component_modal.
 
     Features:
-    - openMaintenanceModal(carId): opens modal and sets form action
-    - closeMaintenanceModal(): closes the modal
+    - Opens via: $dispatch('open-modal', { id: 'add-maintenance', carId })
+    - Dynamic form action: /cars/{carId}/maintenances
     - Auto closes on successful Turbo submit
     - Resets form on success
     - Loading state during request (disabled submit + spinner)
+    - Cost input formatting handled locally (no global JS)
 
     Form:
     - method: POST
@@ -18,17 +19,31 @@
     - name, date, km, cost
 */}}
 
-
 {{ define "add_maintenance_modal" }}
 
-<dialog id="add-maintenance-modal" oncancel="closeAddMaintenanceModal()" class="p-0 border-none backdrop:bg-black/50 m-auto">
+<div
+    x-data="ui_component_modal('add-maintenance')"
+    x-show="isOpen"
+    x-transition
+    class="fixed inset-0 flex items-center justify-center"
+>
 
-    <div class="w-xl p-4 bg-white relative">
+    <!-- OVERLAY -->
+    <div
+        class="absolute inset-0 bg-black/50"
+        @click="close()"
+    ></div>
+
+    <!-- MODAL -->
+    <div
+        class="relative w-xl p-4 bg-white border border-black"
+        @click.stop
+    >
 
         <!-- X BUTTON -->
         <button
             type="button"
-            onclick="closeAddMaintenanceModal()"
+            @click="close()"
             class="absolute top-3 right-3 text-gray-500 hover:text-black cursor-pointer"
         >
             {{ template "icon_x" "w-5 h-5" }}
@@ -37,18 +52,34 @@
         <h2 class="text-lg font-semibold mb-4">Nova manutenção</h2>
 
         <form
-            id="add-maintenance-form"
             method="POST"
 
-            x-data="{ loading: false }"
+            x-data="{
+                loading: false,
+                cents: 0,
+
+                formatCents(cents) {
+                    return (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                },
+
+                handleInput(e) {
+                    const raw = e.target.value.replace(/\D/g, '')
+                    this.cents = raw ? parseInt(raw, 10) : 0
+                    e.target.value = this.formatCents(this.cents)
+                }
+            }"
+
+            x-bind:action="`/cars/${data.carId}/maintenances`"
 
             x-on:turbo:submit-start="loading = true"
 
             x-on:turbo:submit-end="
                 loading = false;
+
                 if (event.detail.success) {
                     $el.reset();
-                    closeAddMaintenanceModal();
+                    cents = 0;
+                    close();
                 }
             "
         >
@@ -72,15 +103,14 @@
             </div>
 
             <!-- COST -->
-            <div class="mb-4" x-data="{ cents: 0 }">
+            <div class="mb-4">
                 <label class="block text-sm font-medium mb-1">Valor</label>
 
                 <input
                     type="text"
                     inputmode="numeric"
-                    id="add-cost-display"
                     placeholder="R$ 0,00"
-                    x-on:input="cents = formatMaintenanceCostInput($event.target)"
+                    @input="handleInput"
                     class="w-full border-b border-gray-300 py-1 focus:outline-none focus:border-black"
                 />
 
@@ -92,7 +122,7 @@
 
                 <button
                     type="button"
-                    onclick="closeAddMaintenanceModal()"
+                    @click="close()"
                     class="border border-gray-300 px-4 py-2 text-sm hover:border-black cursor-pointer transition"
                 >
                     Cancelar
@@ -103,7 +133,9 @@
                     x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }"
                     class="border border-black px-4 py-2 text-sm hover:bg-black hover:text-white cursor-pointer transition flex items-center gap-2"
                 >
-                    <span x-show="loading" class="inline-flex shrink-0">{{ template "icon_loader" "w-4 h-4 animate-spin" }}</span>
+                    <span x-show="loading" class="inline-flex shrink-0">
+                        {{ template "icon_loader" "w-4 h-4 animate-spin" }}
+                    </span>
                     <span x-text="loading ? 'Salvando...' : 'Salvar'"></span>
                 </button>
 
@@ -113,34 +145,6 @@
 
     </div>
 
-</dialog>
-
-<script>
-    function openAddMaintenanceModal(carId) {
-        const modal = document.getElementById('add-maintenance-modal')
-        const form = document.getElementById('add-maintenance-form')
-
-        form.action = `/cars/${carId}/maintenances`
-
-        modal.showModal()
-    }
-
-    function closeAddMaintenanceModal() {
-        document.getElementById('add-maintenance-modal').close()
-    }
-
-    function formatCostDisplay(cents) {
-        return 'R$ ' + (cents / 100).toFixed(2)
-            .replace('.', ',')
-            .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-    }
-
-    function formatMaintenanceCostInput(input) {
-        const raw = input.value.replace(/\D/g, '')
-        const cents = raw ? parseInt(raw, 10) : 0
-        input.value = formatCostDisplay(cents)
-        return cents
-    }
-</script>
+</div>
 
 {{ end }}
