@@ -21,7 +21,7 @@ var staticFiles embed.FS
 func main() {
 	load := func(files ...string) *template.Template {
 		components := []string{
-			"internal/templates/components/base_page.html",
+
 			"internal/templates/components/icons.html",
 			"internal/templates/components/add_car_modal.html",
 			"internal/templates/components/add_maintenance_modal.html",
@@ -38,6 +38,7 @@ func main() {
 
 	templates := map[string]*template.Template{
 		"home": load(
+			"internal/templates/pages/base_page.html",
 			"internal/templates/pages/home_page.html",
 			"internal/templates/partials/car_list.html",
 			"internal/templates/partials/car_list_item.html",
@@ -51,6 +52,7 @@ func main() {
 			"internal/templates/responses/delete_maintenance_list_item_response.html",
 		),
 		"cars": load(
+			"internal/templates/pages/base_page.html",
 			"internal/templates/pages/cars_page.html",
 		),
 	}
