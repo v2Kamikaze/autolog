@@ -1,25 +1,32 @@
 {{/*
     edit_maintenance_modal
 
-    Maintenance edit modal using Alpine ui_component_modal.
+    Maintenance edit modal.
 
-    Features:
-    - Opens via: $dispatch('open-modal', { id: 'edit-maintenance', ...payload })
-    - Receives full maintenance data via event payload
-    - Dynamic form action: /cars/{carId}/maintenances/{id}
-    - Auto fills all fields (name, date, km, cost)
-    - Cost formatting handled locally (no global JS)
-    - Closes via: close()
-    - Auto closes on successful Turbo submit
-    - Resets form on success
-    - Loading state during request
+    Opens via: $dispatch('open-modal', { modalId: 'edit-maintenance', data: { id, carId, name, date, km, cost } })
+    Closes via: close()
+    Auto closes on successful submit
+    Resets form on success
+    Loading state during request (disabled submit + spinner)
+    Cost input formatted as currency (stored in cents)
+
+    data:
+    - id: number (form action)
+    - carId: number (form action)
+    - name: string
+    - date: string (YYYY-MM-DD)
+    - km: number
+    - cost: number in cents
 
     Form:
-    - method: POST (Turbo + backend resolve PUT)
+    - method: PUT
     - action: /cars/{carId}/maintenances/{id}
 
     Fields:
-    - name, date, km, cost
+    - name: string (required)
+    - date: date (required)
+    - km: number (required)
+    - cost: number in cents (required)
 */}}
 
 {{ define "edit_maintenance_modal" }}

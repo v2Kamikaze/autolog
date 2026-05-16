@@ -1,21 +1,22 @@
 {{/*
     edit_car_modal
 
-    Car edit modal using Alpine ui_component_modal.
+    Car edit modal.
 
-    Features:
-    - Opens via: $dispatch('open-modal', { id: 'edit-car', carId, title, km })
-    - Receives data via event payload
-    - Auto fills form fields (title, km)
-    - Dynamic form action: /cars/{id}
-    - Closes via: close()
-    - Auto closes on successful Turbo submit
-    - Resets form on success
-    - Loading state during request (disabled submit + spinner)
+    Opens via: $dispatch('open-modal', { modalId: 'edit-car', data: { carId, title, km } })
+    Closes via: close()
+    Auto closes on successful submit
+    Resets form on success
+    Loading state during request (disabled submit + spinner)
+
+    data:
+    - carId: number (form action)
+    - title: string
+    - km: number
 
     Form:
     - method: PUT
-    - action: /cars/{id}
+    - action: /cars/{carId}
 
     Fields:
     - title: string (required)

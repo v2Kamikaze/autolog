@@ -1,14 +1,15 @@
 {{/*
     add_car_modal
 
-    Car creation modal using Alpine ui_component_modal.
+    Car creation modal.
 
-    Features:
-    - Opens via: $dispatch('open-modal', { id: 'add-car' })
-    - Closes via: close()
-    - Auto closes on successful Turbo submit
-    - Resets form on success
-    - Loading state during request (disabled submit + spinner)
+    Opens via: $dispatch('open-modal', { modalId: 'add-car', data: {} })
+    Closes via: close()
+    Auto closes on successful submit
+    Resets form on success
+    Loading state during request (disabled submit + spinner)
+
+    data: {} (empty form)
 
     Form:
     - method: POST

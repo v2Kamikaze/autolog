@@ -1,13 +1,17 @@
 {{/*
     delete_car_modal
 
-    Car deletion modal using ui_component_modal.
+    Car deletion modal.
 
-    Features:
-    - Opens via: $dispatch('open-modal', { modalId: 'delete-car', carId })
-    - Closes via: close()
-    - Auto closes on successful Turbo submit
-    - Loading state during request (disabled submit + spinner)
+    Opens via: $dispatch('open-modal', { modalId: 'delete-car', data: { carId, title, km } })
+    Closes via: close()
+    Auto closes on successful submit
+    Loading state during request (disabled submit + spinner)
+
+    data:
+    - carId: number (form action)
+    - title: string (confirmation message)
+    - km: number (confirmation message)
 
     Form:
     - method: DELETE

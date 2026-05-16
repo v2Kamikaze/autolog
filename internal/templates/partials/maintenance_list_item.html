@@ -11,12 +11,14 @@
         <button
             x-on:click="$dispatch('open-modal', {
                 modalId: 'edit-maintenance',
-                id: {{ $maintenance.ID }},
-                carId: {{ $maintenance.CarID }},
-                name: '{{ $maintenance.Name }}',
-                date: '{{ ToDate $maintenance.Date }}',
-                km: {{ $maintenance.KM }},
-                cost: {{ $maintenance.Cost }}
+                data: {
+                    id: {{ $maintenance.ID }},
+                    carId: {{ $maintenance.CarID }},
+                    name: '{{ $maintenance.Name }}',
+                    date: '{{ ToDate $maintenance.Date }}',
+                    km: {{ $maintenance.KM }},
+                    cost: {{ $maintenance.Cost }}
+                }
             })"
             class="bg-transparent border p-1 mb-1 border-black hover:bg-black hover:text-white hover:cursor-pointer transition">
             {{ template "icon_edit" "w-4 h-4" }}
@@ -24,12 +26,14 @@
 
         <button x-on:click="$dispatch('open-modal', {
             modalId: 'delete-maintenance',
-            carId: {{ $maintenance.CarID }},
-            maintenanceId: {{ $maintenance.ID }},
-            name: '{{ $maintenance.Name }}',
-            date: '{{ FmtDate $maintenance.Date }}',
-            km: {{ $maintenance.KM }},
-            cost: {{ $maintenance.Cost }}
+            data: {
+                carId: {{ $maintenance.CarID }},
+                maintenanceId: {{ $maintenance.ID }},
+                name: '{{ $maintenance.Name }}',
+                date: '{{ FmtDate $maintenance.Date }}',
+                km: {{ $maintenance.KM }},
+                cost: {{ $maintenance.Cost }}
+            }
         })"
         class="bg-red-600 p-1 mb-1 hover:border-black hover:bg-black text-white hover:cursor-pointer transition">
             {{ template "icon_thrash" "w-4 h-4" }}

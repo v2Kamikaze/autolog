@@ -12,14 +12,14 @@ document.addEventListener('alpine:init', () => {
         init() {
             window.addEventListener('open-modal', (event) => {
                 if (event.detail?.modalId === this.modalId) {
-                    this.open(event.detail)
+                    this.open(event.detail.data)
                 }
             })
         },
 
-        open(data = {}) {
+        open(data) {
             this.isOpen = true
-            this.data = data
+            this.data = data ?? {}
         },
 
         close() {
@@ -43,7 +43,7 @@ document.addEventListener('alpine:init', () => {
 
     <button
         x-data
-        x-on:click="$dispatch('open-modal', { modalId: 'add-car' })"
+        x-on:click="$dispatch('open-modal', { modalId: 'add-car', data: {} })"
         class="border border-black px-4 py-2 text-sm hover:bg-black hover:text-white hover:cursor-pointer transition flex items-center gap-2"
     >
         {{ template "icon_plus" "w-4 h-4" }}

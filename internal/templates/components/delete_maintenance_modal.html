@@ -1,13 +1,20 @@
 {{/*
     delete_maintenance_modal
 
-    Maintenance deletion modal using ui_component_modal.
+    Maintenance deletion modal.
 
-    Features:
-    - Opens via: $dispatch('open-modal', { modalId: 'delete-maintenance', carId, maintenanceId, name })
-    - Closes via: close()
-    - Auto closes on successful Turbo submit
-    - Loading state during request (disabled submit + spinner)
+    Opens via: $dispatch('open-modal', { modalId: 'delete-maintenance', data: { carId, maintenanceId, name, date, km, cost } })
+    Closes via: close()
+    Auto closes on successful submit
+    Loading state during request (disabled submit + spinner)
+
+    data:
+    - carId: number (form action)
+    - maintenanceId: number (form action)
+    - name: string (confirmation message)
+    - date: string (confirmation message)
+    - km: number (confirmation message)
+    - cost: number in cents (confirmation message)
 
     Form:
     - method: DELETE

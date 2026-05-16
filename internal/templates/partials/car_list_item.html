@@ -30,20 +30,20 @@
             <!-- ações -->
             <div class="flex items-center gap-2">
                 <button
-                    x-on:click="$dispatch('open-modal', { modalId: 'add-maintenance', carId: {{ $car.ID }} })"
+                    x-on:click="$dispatch('open-modal', { modalId: 'add-maintenance', data: { carId: {{ $car.ID }} } })"
                     class="bg-transparent border border-gray-300 p-1 hover:border-black hover:bg-black hover:text-white hover:cursor-pointer transition"
                 >
                     {{ template "icon_plus" "w-4 h-4" }}
                 </button>
                 <button
-                    x-on:click="$dispatch('open-modal', { modalId: 'edit-car', carId: {{ $car.ID }}, title: '{{ $car.Title }}', km: {{ $car.KM }} })"
+                    x-on:click="$dispatch('open-modal', { modalId: 'edit-car', data: { carId: {{ $car.ID }}, title: '{{ $car.Title }}', km: {{ $car.KM }} } })"
                     class="bg-transparent border border-gray-300 p-1 hover:border-black hover:bg-black hover:text-white hover:cursor-pointer transition"
                 >
                     {{ template "icon_edit" "w-4 h-4" }}
                 </button>
 
                 <button
-                    x-on:click="$dispatch('open-modal', { modalId: 'delete-car', carId: {{ $car.ID }}, title: '{{ $car.Title }}', km: {{ $car.KM }} })"
+                    x-on:click="$dispatch('open-modal', { modalId: 'delete-car', data: { carId: {{ $car.ID }}, title: '{{ $car.Title }}', km: {{ $car.KM }} } })"
                     class="bg-red-600 p-1 hover:border-black hover:bg-black text-white hover:cursor-pointer transition"
                 >
                     {{ template "icon_thrash" "w-4 h-4" }}

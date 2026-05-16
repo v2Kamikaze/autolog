@@ -1,22 +1,27 @@
 {{/*
     add_maintenance_modal
 
-    Maintenance creation modal using Alpine ui_component_modal.
+    Maintenance creation modal.
 
-    Features:
-    - Opens via: $dispatch('open-modal', { id: 'add-maintenance', carId })
-    - Dynamic form action: /cars/{carId}/maintenances
-    - Auto closes on successful Turbo submit
-    - Resets form on success
-    - Loading state during request (disabled submit + spinner)
-    - Cost input formatting handled locally (no global JS)
+    Opens via: $dispatch('open-modal', { modalId: 'add-maintenance', data: { carId } })
+    Closes via: close()
+    Auto closes on successful submit
+    Resets form on success
+    Loading state during request (disabled submit + spinner)
+    Cost input formatted as currency (stored in cents)
+
+    data:
+    - carId: number (form action)
 
     Form:
     - method: POST
     - action: /cars/{carId}/maintenances
 
     Fields:
-    - name, date, km, cost
+    - name: string (required)
+    - date: date (required)
+    - km: number (required)
+    - cost: number in cents (required)
 */}}
 
 {{ define "add_maintenance_modal" }}
