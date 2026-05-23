@@ -1,129 +1,86 @@
-{{/*
-    edit_car_modal
-
-    Car edit modal.
-
-    Opens via: $dispatch('open-modal', { modalId: 'edit-car', data: { carId, title, km } })
-    Closes via: close()
-    Auto closes on successful submit
-    Resets form on success
-    Loading state during request (disabled submit + spinner)
-
-    data:
-    - carId: number (form action)
-    - title: string
-    - km: number
-
-    Form:
-    - method: PUT
-    - action: /cars/{carId}
-
-    Fields:
-    - title: string (required)
-    - km: number (required)
-*/}}
-
 {{ define "edit_car_modal" }}
 
 <div
     x-data="ui_component_modal('edit-car')"
     x-show="isOpen"
+    x-cloak
     x-transition
-    class="fixed inset-0 flex items-center justify-center"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4"
 >
-
-    <!-- OVERLAY -->
     <div
-        class="absolute inset-0 bg-black/50"
+        class="absolute inset-0 z-0 bg-black/80"
         x-on:click="close()"
     ></div>
 
-    <!-- MODAL -->
     <div
-        class="relative w-2xl p-4 bg-white"
+        class="relative z-10 w-full max-w-lg border-[3px] border-neutral-100 bg-neutral-900 p-8 shadow-[8px_8px_0_0_#000] sm:max-w-xl"
         x-on:click.stop
     >
-
-        <!-- X BUTTON -->
         <button
             type="button"
             x-on:click="close()"
-            class="absolute top-3 right-3 text-gray-500 hover:text-black cursor-pointer"
+            class="absolute top-6 right-6 flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-100 bg-neutral-900 text-neutral-100 transition hover:-translate-y-0.5 hover:bg-neutral-100 hover:text-neutral-950"
         >
-            {{ template "icon_x" "w-5 h-5" }}
+            {{ template "icon_x" "w-4 h-4" }}
         </button>
 
-        <h2 class="text-lg font-semibold mb-4">Editar Veículo</h2>
+        <h2 class="mb-6 pr-12 text-sm font-extrabold tracking-widest text-neutral-100 uppercase">Editar veículo</h2>
 
         <form
             method="PUT"
             x-data="{ loading: false }"
-
             x-bind:action="`/cars/${data.carId}`"
-
             x-on:turbo:submit-start="loading = true"
-
             x-on:turbo:submit-end="
                 loading = false;
-
                 if (event.detail.success) {
                     $el.reset();
                     close();
                 }
             "
         >
-
-            <!-- TITLE -->
             <div class="mb-4">
-                <label class="block text-sm font-medium mb-1">Título</label>
+                <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Título</label>
                 <input
                     name="title"
                     required
                     x-bind:value="data.title || ''"
-                    class="w-full border-b border-gray-300 py-1 focus:outline-none focus:border-black"
+                    class="w-full border-2 border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 focus:border-neutral-100 focus:outline-none"
                 >
             </div>
 
-            <!-- KM -->
             <div class="mb-4">
-                <label class="block text-sm font-medium mb-1">KM</label>
+                <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">KM</label>
                 <input
                     type="number"
                     name="km"
                     required
                     x-bind:value="data.km || ''"
-                    class="w-full border-b border-gray-300 py-1 focus:outline-none focus:border-black"
+                    class="w-full border-2 border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 focus:border-neutral-100 focus:outline-none"
                 >
             </div>
 
-            <!-- ACTIONS -->
-            <div class="flex justify-end gap-2 mt-6">
-
+            <div class="mt-6 flex justify-end gap-3">
                 <button
                     type="button"
                     x-on:click="close()"
-                    class="border border-gray-300 px-4 py-2 text-sm hover:border-black cursor-pointer transition"
+                    class="cursor-pointer border-2 border-neutral-100 bg-neutral-900 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-100 uppercase shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
                 >
                     Cancelar
                 </button>
-
                 <button
                     type="submit"
                     x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }"
-                    class="border border-black px-4 py-2 text-sm hover:bg-black hover:text-white cursor-pointer transition flex items-center gap-2"
+                    class="flex cursor-pointer items-center gap-2 border-2 border-neutral-100 bg-neutral-900 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-100 uppercase shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
                 >
                     <span x-show="loading" class="inline-flex shrink-0">
                         {{ template "icon_loader" "w-4 h-4 animate-spin" }}
                     </span>
                     <span x-text="loading ? 'Editando...' : 'Editar'"></span>
                 </button>
-
             </div>
-
         </form>
-
     </div>
-
 </div>
 
 {{ end }}
