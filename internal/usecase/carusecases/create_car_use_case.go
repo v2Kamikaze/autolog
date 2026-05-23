@@ -9,6 +9,7 @@ import (
 
 type CreateCarInput struct {
 	Title string
+	Type  string
 	KM    int
 }
 
@@ -27,6 +28,7 @@ func NewCreateCarUseCase(carPersistence persistence.CarPersistence) *CreateCarUs
 func (u *CreateCarUseCase) Execute(ctx context.Context, input CreateCarInput) (*CreateCarResponse, error) {
 	car := &entities.Car{
 		Title:        input.Title,
+		Type:         input.Type,
 		KM:           input.KM,
 		Maintenances: []*entities.Maintenance{},
 	}
