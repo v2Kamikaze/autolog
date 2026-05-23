@@ -4,24 +4,22 @@
 {{ $maintenances := $car.Maintenances }}
 
 <div>
-    <div class="grid grid-cols-5 text-xs text-gray-500 mb-2 px-1">
-        <span>Serviço</span>
-        <span>Data</span>
-        <span>KM</span>
-        <span class="text-right">Valor</span>
-        <span class="text-right">Ações</span>
+    <div class="mb-[22px] flex items-center justify-between gap-4">
+        <div class="text-xs tracking-[0.25em] text-neutral-500 uppercase">histórico de manutenção</div>
+        <div id="total-cost-{{ $car.ID }}" class="text-sm font-extrabold text-neutral-100 uppercase">
+            total: {{ FmtCurrency $car.TotalCost }}
+        </div>
     </div>
 
-    <ul id="maintenances-list-{{ $car.ID }}" class="space-y-4 text-sm divide-y divide-gray-300">
+    <div id="maintenances-list-{{ $car.ID }}" class="flex flex-col gap-3.5">
         {{ if $maintenances }}
             {{ range $maintenances }}
                 {{ template "maintenance_list_item" . }}
             {{ end }}
         {{ else }}
-            <p class="text-sm text-gray-500">
-                Sem registros de manutenção
-            </p>
+            <p class="text-sm text-neutral-500">Sem registros de manutenção</p>
         {{ end }}
-    </ul>
+    </div>
 </div>
+
 {{ end }}
