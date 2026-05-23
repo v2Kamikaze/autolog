@@ -6,12 +6,20 @@
 
 {{ $carId := .CarID }}
 
+{{ $maintenanceCount := .MaintenanceCount }}
+
 <turbo-stream action="remove" target="maintenances-list-item-{{ .Maintenance.ID }}">
 </turbo-stream>
 
 <turbo-stream action="update" target="total-cost-{{ $carId }}">
     <template>
         total: {{ FmtCurrency $totalCost }}
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="car-maintenance-count-{{ $carId }}">
+    <template>
+        {{ template "car_maintenance_count_text" $maintenanceCount }}
     </template>
 </turbo-stream>
 
