@@ -10,46 +10,47 @@ import (
 	"github.com/gorilla/schema"
 	"github.com/v2code/autolog/internal/controllers/requests"
 	"github.com/v2code/autolog/internal/persistence"
+	"github.com/v2code/autolog/internal/persistence/entities"
 	"github.com/v2code/autolog/internal/usecase/carusecases"
 )
 
 const TurboStreamContentType = "text/vnd.turbo-stream.html"
 
 type HomeHandler struct {
-	listCarsUseCase          *carusecases.ListCarsUseCase
-	createCarUseCase         *carusecases.CreateCarUseCase
-	addMaintenanceUseCase    *carusecases.AddMaintenanceUseCase
-	editMaintenanceUseCase   *carusecases.EditMaintenanceUseCase
-	editCarUseCase           *carusecases.EditCarUseCase
-	deleteCarUseCase         *carusecases.DeleteCarUseCase
-	deleteMaintenanceUseCase *carusecases.DeleteMaintenanceUseCase
-	formDecoder              *schema.Decoder
-	tmpl                     *template.Template
+	listCarsUseCase       *carusecases.ListCarsUseCase
+	createCarUseCase      *carusecases.CreateCarUseCase
+	addLogEntryUseCase    *carusecases.AddLogEntryUseCase
+	editLogEntryUseCase   *carusecases.EditLogEntryUseCase
+	editCarUseCase        *carusecases.EditCarUseCase
+	deleteCarUseCase      *carusecases.DeleteCarUseCase
+	deleteLogEntryUseCase *carusecases.DeleteLogEntryUseCase
+	formDecoder           *schema.Decoder
+	tmpl                  *template.Template
 }
 
 func NewHomeHandler(
 	listCarsUseCase *carusecases.ListCarsUseCase,
 	createCarUseCase *carusecases.CreateCarUseCase,
-	addMaintenanceUseCase *carusecases.AddMaintenanceUseCase,
-	editMaintenanceUseCase *carusecases.EditMaintenanceUseCase,
+	addLogEntryUseCase *carusecases.AddLogEntryUseCase,
+	editLogEntryUseCase *carusecases.EditLogEntryUseCase,
 	editCarUseCase *carusecases.EditCarUseCase,
 	deleteCarUseCase *carusecases.DeleteCarUseCase,
-	deleteMaintenanceUseCase *carusecases.DeleteMaintenanceUseCase,
+	deleteLogEntryUseCase *carusecases.DeleteLogEntryUseCase,
 	tmpl *template.Template,
 ) *HomeHandler {
 	formDecoder := schema.NewDecoder()
 	formDecoder.IgnoreUnknownKeys(true)
 
 	return &HomeHandler{
-		listCarsUseCase:          listCarsUseCase,
-		createCarUseCase:         createCarUseCase,
-		addMaintenanceUseCase:    addMaintenanceUseCase,
-		editMaintenanceUseCase:   editMaintenanceUseCase,
-		editCarUseCase:           editCarUseCase,
-		deleteCarUseCase:         deleteCarUseCase,
-		deleteMaintenanceUseCase: deleteMaintenanceUseCase,
-		formDecoder:              formDecoder,
-		tmpl:                     tmpl,
+		listCarsUseCase:       listCarsUseCase,
+		createCarUseCase:      createCarUseCase,
+		addLogEntryUseCase:    addLogEntryUseCase,
+		editLogEntryUseCase:   editLogEntryUseCase,
+		editCarUseCase:        editCarUseCase,
+		deleteCarUseCase:      deleteCarUseCase,
+		deleteLogEntryUseCase: deleteLogEntryUseCase,
+		formDecoder:           formDecoder,
+		tmpl:                  tmpl,
 	}
 }
 
@@ -96,7 +97,7 @@ func (h *HomeHandler) CreateCar(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *HomeHandler) AddMaintenance(w http.ResponseWriter, r *http.Request) {
+func (h *HomeHandler) AddLogEntry(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "failed to parse form", http.StatusBadRequest)
 		return
@@ -110,7 +111,7 @@ func (h *HomeHandler) AddMaintenance(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	form := requests.AddMaintenanceFormRequest{}
+	form := requests.AddLogEntryFormRequest{}
 	if err := h.formDecoder.Decode(&form, r.PostForm); err != nil {
 		http.Error(w, "invalid form data", http.StatusBadRequest)
 		return
@@ -122,9 +123,10 @@ func (h *HomeHandler) AddMaintenance(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	output, err := h.addMaintenanceUseCase.Execute(r.Context(), carusecases.AddMaintenanceInput{
+	output, err := h.addLogEntryUseCase.Execute(r.Context(), carusecases.AddLogEntryInput{
 		CarID: carIDInt,
 		Name:  form.Name,
+		Type:  entities.LogEntryCategory(form.EntryType),
 		Date:  dateTime,
 		KM:    form.KM,
 		Cost:  form.Cost,
@@ -134,26 +136,30 @@ func (h *HomeHandler) AddMaintenance(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "car not found", http.StatusNotFound)
 			return
 		}
-		http.Error(w, "failed to add maintenance", http.StatusInternalServerError)
+		if errors.Is(err, persistence.ErrInvalidLogEntryType) {
+			http.Error(w, "invalid entry type", http.StatusBadRequest)
+			return
+		}
+		http.Error(w, "failed to add log entry", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", TurboStreamContentType)
 
-	if err := h.tmpl.ExecuteTemplate(w, "add_maintenance_list_item_response", output); err != nil {
+	if err := h.tmpl.ExecuteTemplate(w, "add_log_entry_list_item_response", output); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
 
-func (h *HomeHandler) EditMaintenance(w http.ResponseWriter, r *http.Request) {
+func (h *HomeHandler) EditLogEntry(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "failed to parse form", http.StatusBadRequest)
 		return
 	}
 
 	carID := r.PathValue("carId")
-	maintenanceID := r.PathValue("maintenanceId")
+	logEntryID := r.PathValue("logEntryId")
 
 	carIDInt, err := strconv.Atoi(carID)
 	if err != nil {
@@ -161,13 +167,13 @@ func (h *HomeHandler) EditMaintenance(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	maintenanceIDInt, err := strconv.Atoi(maintenanceID)
+	logEntryIDInt, err := strconv.Atoi(logEntryID)
 	if err != nil {
-		http.Error(w, "invalid maintenance id", http.StatusBadRequest)
+		http.Error(w, "invalid log entry id", http.StatusBadRequest)
 		return
 	}
 
-	form := requests.EditMaintenanceFormRequest{}
+	form := requests.EditLogEntryFormRequest{}
 	if err := h.formDecoder.Decode(&form, r.PostForm); err != nil {
 		http.Error(w, "invalid form data", http.StatusBadRequest)
 		return
@@ -179,30 +185,35 @@ func (h *HomeHandler) EditMaintenance(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	output, err := h.editMaintenanceUseCase.Execute(r.Context(), carusecases.EditMaintenanceInput{
-		CarID:         carIDInt,
-		MaintenanceID: maintenanceIDInt,
-		Name:          form.Name,
-		Date:          dateTime,
-		KM:            form.KM,
-		Cost:          form.Cost,
+	output, err := h.editLogEntryUseCase.Execute(r.Context(), carusecases.EditLogEntryInput{
+		CarID:      carIDInt,
+		LogEntryID: logEntryIDInt,
+		Name:       form.Name,
+		Type:       entities.LogEntryCategory(form.EntryType),
+		Date:       dateTime,
+		KM:         form.KM,
+		Cost:       form.Cost,
 	})
 	if err != nil {
 		if errors.Is(err, persistence.ErrCarNotFound) {
 			http.Error(w, "car not found", http.StatusNotFound)
 			return
 		}
-		if errors.Is(err, persistence.ErrMaintenanceNotFound) {
-			http.Error(w, "maintenance not found", http.StatusNotFound)
+		if errors.Is(err, persistence.ErrLogEntryNotFound) {
+			http.Error(w, "log entry not found", http.StatusNotFound)
 			return
 		}
-		http.Error(w, "failed to edit maintenance", http.StatusInternalServerError)
+		if errors.Is(err, persistence.ErrInvalidLogEntryType) {
+			http.Error(w, "invalid entry type", http.StatusBadRequest)
+			return
+		}
+		http.Error(w, "failed to edit log entry", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", TurboStreamContentType)
 
-	if err := h.tmpl.ExecuteTemplate(w, "edit_maintenance_list_item_response", output); err != nil {
+	if err := h.tmpl.ExecuteTemplate(w, "edit_log_entry_list_item_response", output); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -277,9 +288,9 @@ func (h *HomeHandler) DeleteCar(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *HomeHandler) DeleteMaintenance(w http.ResponseWriter, r *http.Request) {
+func (h *HomeHandler) DeleteLogEntry(w http.ResponseWriter, r *http.Request) {
 	carID := r.PathValue("carId")
-	maintenanceID := r.PathValue("maintenanceId")
+	logEntryID := r.PathValue("logEntryId")
 
 	carIDInt, err := strconv.Atoi(carID)
 	if err != nil {
@@ -287,25 +298,25 @@ func (h *HomeHandler) DeleteMaintenance(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	maintenanceIDInt, err := strconv.Atoi(maintenanceID)
+	logEntryIDInt, err := strconv.Atoi(logEntryID)
 	if err != nil {
-		http.Error(w, "invalid maintenance id", http.StatusBadRequest)
+		http.Error(w, "invalid log entry id", http.StatusBadRequest)
 		return
 	}
 
-	resp, err := h.deleteMaintenanceUseCase.Execute(r.Context(), carusecases.DeleteMaintenanceInput{
-		CarID:         carIDInt,
-		MaintenanceID: maintenanceIDInt,
+	resp, err := h.deleteLogEntryUseCase.Execute(r.Context(), carusecases.DeleteLogEntryInput{
+		CarID:      carIDInt,
+		LogEntryID: logEntryIDInt,
 	})
 
 	if err != nil {
-		http.Error(w, "failed to delete maintenance", http.StatusInternalServerError)
+		http.Error(w, "failed to delete log entry", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", TurboStreamContentType)
 
-	if err := h.tmpl.ExecuteTemplate(w, "delete_maintenance_list_item_response", resp); err != nil {
+	if err := h.tmpl.ExecuteTemplate(w, "delete_log_entry_list_item_response", resp); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
