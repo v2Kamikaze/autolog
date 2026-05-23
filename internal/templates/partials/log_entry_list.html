@@ -1,0 +1,24 @@
+{{ define "log_entry_list" }}
+
+{{ $car := . }}
+{{ $logEntries := $car.LogEntries }}
+
+<div>
+    <div class="mb-[22px] text-xs tracking-[0.25em] text-neutral-500 uppercase">histórico de logs</div>
+
+    <div id="log-entries-list-{{ $car.ID }}" class="flex flex-col gap-3.5">
+        {{ if $logEntries }}
+            {{ range $logEntries }}
+                {{ template "log_entry_list_item" . }}
+            {{ end }}
+        {{ else }}
+            <p class="text-sm text-neutral-500">Sem logs registrados</p>
+        {{ end }}
+    </div>
+
+    <div id="total-cost-{{ $car.ID }}" class="mt-6 text-right text-sm font-extrabold text-neutral-100 uppercase">
+        total: {{ FmtCurrency $car.TotalCost }}
+    </div>
+</div>
+
+{{ end }}
