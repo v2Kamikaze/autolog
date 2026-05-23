@@ -17,9 +17,10 @@ type AddMaintenanceInput struct {
 }
 
 type AddMaintenanceResponse struct {
-	CarID       int
-	Maintenance *entities.Maintenance
-	TotalCost   int
+	CarID            int
+	Maintenance      *entities.Maintenance
+	TotalCost        int
+	MaintenanceCount int
 }
 
 type AddMaintenanceUseCase struct {
@@ -49,8 +50,9 @@ func (u *AddMaintenanceUseCase) Execute(ctx context.Context, input AddMaintenanc
 	}
 
 	return &AddMaintenanceResponse{
-		CarID:       input.CarID,
-		Maintenance: inserted,
-		TotalCost:   car.TotalCost(),
+		CarID:            input.CarID,
+		Maintenance:      inserted,
+		TotalCost:        car.TotalCost(),
+		MaintenanceCount: car.MaintenanceCount(),
 	}, nil
 }
