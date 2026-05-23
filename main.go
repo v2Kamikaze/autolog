@@ -27,11 +27,11 @@ func main() {
 			"internal/templates/components/car_silhouette.html",
 			"internal/templates/components/logo.html",
 			"internal/templates/components/add_car_modal.html",
-			"internal/templates/components/add_maintenance_modal.html",
+			"internal/templates/components/add_log_entry_modal.html",
 			"internal/templates/components/edit_car_modal.html",
-			"internal/templates/components/edit_maintenance_modal.html",
+			"internal/templates/components/edit_log_entry_modal.html",
 			"internal/templates/components/delete_car_modal.html",
-			"internal/templates/components/delete_maintenance_modal.html",
+			"internal/templates/components/delete_log_entry_modal.html",
 		}
 
 		files = append(files, components...)
@@ -45,16 +45,16 @@ func main() {
 			"internal/templates/pages/home_page.html",
 			"internal/templates/partials/navigation_bar.html",
 			"internal/templates/partials/car_list.html",
-			"internal/templates/partials/car_maintenance_count_text.html",
+			"internal/templates/partials/car_log_entry_count_text.html",
 			"internal/templates/partials/car_list_item.html",
-			"internal/templates/partials/maintenance_list.html",
-			"internal/templates/partials/maintenance_list_item.html",
+			"internal/templates/partials/log_entry_list.html",
+			"internal/templates/partials/log_entry_list_item.html",
 			"internal/templates/responses/add_car_list_item_response.html",
 			"internal/templates/responses/edit_car_list_item_response.html",
-			"internal/templates/responses/add_maintenance_list_item_response.html",
-			"internal/templates/responses/edit_maintenance_list_item_response.html",
+			"internal/templates/responses/add_log_entry_list_item_response.html",
+			"internal/templates/responses/edit_log_entry_list_item_response.html",
 			"internal/templates/responses/delete_car_list_item_response.html",
-			"internal/templates/responses/delete_maintenance_list_item_response.html",
+			"internal/templates/responses/delete_log_entry_list_item_response.html",
 		),
 		"cars": load(
 			"internal/templates/pages/base_page.html",
@@ -65,19 +65,19 @@ func main() {
 	carPersistence := persistence.NewInMemoryCarPersistence()
 	listCarsUseCase := carusecases.NewListCarsUseCase(carPersistence)
 	createCarUseCase := carusecases.NewCreateCarUseCase(carPersistence)
-	addMaintenanceUseCase := carusecases.NewAddMaintenanceUseCase(carPersistence)
-	editMaintenanceUseCase := carusecases.NewEditMaintenanceUseCase(carPersistence)
+	addLogEntryUseCase := carusecases.NewAddLogEntryUseCase(carPersistence)
+	editLogEntryUseCase := carusecases.NewEditLogEntryUseCase(carPersistence)
 	editCarUseCase := carusecases.NewEditCarUseCase(carPersistence)
 	deleteCarUseCase := carusecases.NewDeleteCarUseCase(carPersistence)
-	deleteMaintenanceUseCase := carusecases.NewDeleteMaintenanceUseCase(carPersistence)
+	deleteLogEntryUseCase := carusecases.NewDeleteLogEntryUseCase(carPersistence)
 	homeHandler := controllers.NewHomeHandler(
 		listCarsUseCase,
 		createCarUseCase,
-		addMaintenanceUseCase,
-		editMaintenanceUseCase,
+		addLogEntryUseCase,
+		editLogEntryUseCase,
 		editCarUseCase,
 		deleteCarUseCase,
-		deleteMaintenanceUseCase,
+		deleteLogEntryUseCase,
 		templates["home"],
 	)
 
@@ -85,11 +85,11 @@ func main() {
 	mux.Handle("GET /static/", http.FileServer(http.FS(staticFiles)))
 	mux.HandleFunc("GET /", homeHandler.Home)
 	mux.HandleFunc("POST /cars", homeHandler.CreateCar)
-	mux.HandleFunc("POST /cars/{id}/maintenances", homeHandler.AddMaintenance)
-	mux.HandleFunc("PUT /cars/{carId}/maintenances/{maintenanceId}", homeHandler.EditMaintenance)
+	mux.HandleFunc("POST /cars/{id}/log-entries", homeHandler.AddLogEntry)
+	mux.HandleFunc("PUT /cars/{carId}/log-entries/{logEntryId}", homeHandler.EditLogEntry)
 	mux.HandleFunc("PUT /cars/{id}", homeHandler.EditCar)
 	mux.HandleFunc("DELETE /cars/{id}", homeHandler.DeleteCar)
-	mux.HandleFunc("DELETE /cars/{carId}/maintenances/{maintenanceId}", homeHandler.DeleteMaintenance)
+	mux.HandleFunc("DELETE /cars/{carId}/log-entries/{logEntryId}", homeHandler.DeleteLogEntry)
 
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }
