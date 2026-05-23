@@ -13,9 +13,10 @@ type DeleteMaintenanceInput struct {
 }
 
 type DeleteMaintenanceResponse struct {
-	CarID       int
-	TotalCost   int
-	Maintenance *entities.Maintenance
+	CarID            int
+	TotalCost        int
+	MaintenanceCount int
+	Maintenance      *entities.Maintenance
 }
 
 type DeleteMaintenanceUseCase struct {
@@ -40,8 +41,9 @@ func (u *DeleteMaintenanceUseCase) Execute(ctx context.Context, input DeleteMain
 	}
 
 	return &DeleteMaintenanceResponse{
-		CarID:       car.ID,
-		TotalCost:   car.TotalCost(),
-		Maintenance: maintenance,
+		CarID:            car.ID,
+		TotalCost:        car.TotalCost(),
+		MaintenanceCount: car.MaintenanceCount(),
+		Maintenance:      maintenance,
 	}, nil
 }
