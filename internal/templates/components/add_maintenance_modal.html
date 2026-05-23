@@ -1,86 +1,49 @@
-{{/*
-    add_maintenance_modal
-
-    Maintenance creation modal.
-
-    Opens via: $dispatch('open-modal', { modalId: 'add-maintenance', data: { carId } })
-    Closes via: close()
-    Auto closes on successful submit
-    Resets form on success
-    Loading state during request (disabled submit + spinner)
-    Cost input formatted as currency (stored in cents)
-
-    data:
-    - carId: number (form action)
-
-    Form:
-    - method: POST
-    - action: /cars/{carId}/maintenances
-
-    Fields:
-    - name: string (required)
-    - date: date (required)
-    - km: number (required)
-    - cost: number in cents (required)
-*/}}
-
 {{ define "add_maintenance_modal" }}
 
 <div
     x-data="ui_component_modal('add-maintenance')"
     x-show="isOpen"
+    x-cloak
     x-transition
-    class="fixed inset-0 flex items-center justify-center"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4"
 >
-
-    <!-- OVERLAY -->
     <div
-        class="absolute inset-0 bg-black/50"
-        @click="close()"
+        class="absolute inset-0 z-0 bg-black/80"
+        x-on:click="close()"
     ></div>
 
-    <!-- MODAL -->
     <div
-        class="relative w-xl p-4 bg-white border border-black"
-        @click.stop
+        class="relative z-10 w-full max-w-lg border-[3px] border-neutral-100 bg-neutral-900 p-8 shadow-[8px_8px_0_0_#000]"
+        x-on:click.stop
     >
-
-        <!-- X BUTTON -->
         <button
             type="button"
-            @click="close()"
-            class="absolute top-3 right-3 text-gray-500 hover:text-black cursor-pointer"
+            x-on:click="close()"
+            class="absolute top-6 right-6 flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-100 bg-neutral-900 text-neutral-100 transition hover:-translate-y-0.5 hover:bg-neutral-100 hover:text-neutral-950"
         >
-            {{ template "icon_x" "w-5 h-5" }}
+            {{ template "icon_x" "w-4 h-4" }}
         </button>
 
-        <h2 class="text-lg font-semibold mb-4">Nova manutenção</h2>
+        <h2 class="mb-6 pr-12 text-sm font-extrabold tracking-widest text-neutral-100 uppercase">Nova manutenção</h2>
 
         <form
             method="POST"
-
             x-data="{
                 loading: false,
                 cents: 0,
-
                 formatCents(cents) {
                     return (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
                 },
-
                 handleInput(e) {
                     const raw = e.target.value.replace(/\D/g, '')
                     this.cents = raw ? parseInt(raw, 10) : 0
                     e.target.value = this.formatCents(this.cents)
                 }
             }"
-
             x-bind:action="`/cars/${data.carId}/maintenances`"
-
             x-on:turbo:submit-start="loading = true"
-
             x-on:turbo:submit-end="
                 loading = false;
-
                 if (event.detail.success) {
                     $el.reset();
                     cents = 0;
@@ -88,68 +51,68 @@
                 }
             "
         >
-
-            <!-- NAME -->
             <div class="mb-4">
-                <label class="block text-sm font-medium mb-1">Nome</label>
-                <input name="name" required class="w-full border-b border-gray-300 py-1">
+                <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Nome</label>
+                <input
+                    name="name"
+                    required
+                    class="w-full border-2 border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 focus:border-neutral-100 focus:outline-none"
+                >
             </div>
 
-            <!-- DATE -->
             <div class="mb-4">
-                <label class="block text-sm font-medium mb-1">Data</label>
-                <input type="date" name="date" required class="w-full border-b border-gray-300 py-1">
+                <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Data</label>
+                <input
+                    type="date"
+                    name="date"
+                    required
+                    class="w-full border-2 border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 [color-scheme:dark] focus:border-neutral-100 focus:outline-none"
+                >
             </div>
 
-            <!-- KM -->
             <div class="mb-4">
-                <label class="block text-sm font-medium mb-1">KM</label>
-                <input type="number" name="km" required class="w-full border-b border-gray-300 py-1">
+                <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">KM</label>
+                <input
+                    type="number"
+                    name="km"
+                    required
+                    class="w-full border-2 border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 focus:border-neutral-100 focus:outline-none"
+                >
             </div>
 
-            <!-- COST -->
             <div class="mb-4">
-                <label class="block text-sm font-medium mb-1">Valor</label>
-
+                <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Valor</label>
                 <input
                     type="text"
                     inputmode="numeric"
                     placeholder="R$ 0,00"
-                    @input="handleInput"
-                    class="w-full border-b border-gray-300 py-1 focus:outline-none focus:border-black"
-                />
-
-                <input type="hidden" name="cost" x-model="cents" />
+                    x-on:input="handleInput"
+                    class="w-full border-2 border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 placeholder:text-neutral-600 focus:border-neutral-100 focus:outline-none"
+                >
+                <input type="hidden" name="cost" x-model="cents">
             </div>
 
-            <!-- ACTIONS -->
-            <div class="flex justify-end gap-2 mt-6">
-
+            <div class="mt-6 flex justify-end gap-3">
                 <button
                     type="button"
-                    @click="close()"
-                    class="border border-gray-300 px-4 py-2 text-sm hover:border-black cursor-pointer transition"
+                    x-on:click="close()"
+                    class="cursor-pointer border-2 border-neutral-100 bg-neutral-900 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-100 uppercase shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
                 >
                     Cancelar
                 </button>
-
                 <button
                     type="submit"
                     x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }"
-                    class="border border-black px-4 py-2 text-sm hover:bg-black hover:text-white cursor-pointer transition flex items-center gap-2"
+                    class="flex cursor-pointer items-center gap-2 border-2 border-neutral-100 bg-neutral-900 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-100 uppercase shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
                 >
                     <span x-show="loading" class="inline-flex shrink-0">
                         {{ template "icon_loader" "w-4 h-4 animate-spin" }}
                     </span>
                     <span x-text="loading ? 'Salvando...' : 'Salvar'"></span>
                 </button>
-
             </div>
-
         </form>
-
     </div>
-
 </div>
 
 {{ end }}
