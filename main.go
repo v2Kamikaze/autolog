@@ -45,6 +45,7 @@ func main() {
 			"internal/templates/pages/home_page.html",
 			"internal/templates/partials/navigation_bar.html",
 			"internal/templates/partials/car_list.html",
+			"internal/templates/partials/car_maintenance_count_text.html",
 			"internal/templates/partials/car_list_item.html",
 			"internal/templates/partials/maintenance_list.html",
 			"internal/templates/partials/maintenance_list_item.html",
