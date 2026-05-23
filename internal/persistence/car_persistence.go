@@ -52,6 +52,7 @@ func seedCars() []*entities.Car {
 		{
 			ID:    1,
 			Title: "Honda Civic EXL 2020 2.0 Flex Automático",
+			Type:  "sedan",
 			KM:    28000,
 			Maintenances: []*entities.Maintenance{
 				{ID: 1, CarID: 1, Name: "Troca de óleo", Date: time.Date(2024, time.January, 10, 0, 0, 0, 0, time.UTC), KM: 5000, Cost: 30000},
@@ -64,6 +65,7 @@ func seedCars() []*entities.Car {
 		{
 			ID:    2,
 			Title: "Toyota Corolla XEi 2021 2.0 Flex Automático",
+			Type:  "sedan",
 			KM:    22000,
 			Maintenances: []*entities.Maintenance{
 				{ID: 6, CarID: 2, Name: "Troca de óleo", Date: time.Date(2024, time.February, 5, 0, 0, 0, 0, time.UTC), KM: 4000, Cost: 28000},
@@ -76,6 +78,7 @@ func seedCars() []*entities.Car {
 		{
 			ID:    3,
 			Title: "Nissan Kicks SV 2022 1.6 Flex Automático",
+			Type:  "suv",
 			KM:    15000,
 			Maintenances: []*entities.Maintenance{
 				{ID: 11, CarID: 3, Name: "Troca de óleo", Date: time.Date(2025, time.January, 15, 0, 0, 0, 0, time.UTC), KM: 3000, Cost: 26000},
@@ -88,6 +91,7 @@ func seedCars() []*entities.Car {
 		{
 			ID:    4,
 			Title: "Hyundai i30 2019 2.0 Automático",
+			Type:  "hatch",
 			KM:    35000,
 			Maintenances: []*entities.Maintenance{
 				{ID: 16, CarID: 4, Name: "Troca de óleo", Date: time.Date(2024, time.January, 20, 0, 0, 0, 0, time.UTC), KM: 8000, Cost: 27000},
@@ -100,6 +104,7 @@ func seedCars() []*entities.Car {
 		{
 			ID:    5,
 			Title: "Hyundai Tucson 2021 1.6 Turbo Automático",
+			Type:  "suv",
 			KM:    20000,
 			Maintenances: []*entities.Maintenance{
 				{ID: 21, CarID: 5, Name: "Troca de óleo", Date: time.Date(2025, time.February, 25, 0, 0, 0, 0, time.UTC), KM: 4000, Cost: 30000},
@@ -112,6 +117,7 @@ func seedCars() []*entities.Car {
 		{
 			ID:    6,
 			Title: "Honda Fit EX 2018 1.5 Flex Automático",
+			Type:  "hatch",
 			KM:    45000,
 			Maintenances: []*entities.Maintenance{
 				{ID: 26, CarID: 6, Name: "Troca de óleo", Date: time.Date(2024, time.January, 10, 0, 0, 0, 0, time.UTC), KM: 10000, Cost: 25000},
@@ -124,6 +130,7 @@ func seedCars() []*entities.Car {
 		{
 			ID:    7,
 			Title: "Toyota Yaris XS 2020 1.5 Flex Automático",
+			Type:  "hatch",
 			KM:    32000,
 			Maintenances: []*entities.Maintenance{
 				{ID: 31, CarID: 7, Name: "Troca de óleo", Date: time.Date(2024, time.February, 5, 0, 0, 0, 0, time.UTC), KM: 8000, Cost: 26000},
@@ -136,6 +143,7 @@ func seedCars() []*entities.Car {
 		{
 			ID:    8,
 			Title: "Nissan Versa SV 2019 1.6 Flex Automático",
+			Type:  "sedan",
 			KM:    60000,
 			Maintenances: []*entities.Maintenance{
 				{ID: 36, CarID: 8, Name: "Troca de óleo", Date: time.Date(2023, time.January, 15, 0, 0, 0, 0, time.UTC), KM: 15000, Cost: 25000},
@@ -148,6 +156,7 @@ func seedCars() []*entities.Car {
 		{
 			ID:    9,
 			Title: "Mitsubishi Lancer HL 2016 2.0 Automático",
+			Type:  "sedan",
 			KM:    70000,
 			Maintenances: []*entities.Maintenance{
 				{ID: 41, CarID: 9, Name: "Troca de óleo", Date: time.Date(2023, time.February, 20, 0, 0, 0, 0, time.UTC), KM: 20000, Cost: 28000},
@@ -160,6 +169,7 @@ func seedCars() []*entities.Car {
 		{
 			ID:    10,
 			Title: "Suzuki Jimny 4Sport 2018 1.3 4x4",
+			Type:  "suv",
 			KM:    50000,
 			Maintenances: []*entities.Maintenance{
 				{ID: 46, CarID: 10, Name: "Troca de óleo", Date: time.Date(2023, time.March, 10, 0, 0, 0, 0, time.UTC), KM: 10000, Cost: 26000},
@@ -267,6 +277,7 @@ func (p *carPersistence) EditCar(_ context.Context, patch *entities.Car) (*entit
 	}
 
 	car.Title = patch.Title
+	car.Type = patch.Type
 	car.KM = patch.KM
 
 	return car, nil
