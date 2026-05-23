@@ -1,0 +1,24 @@
+{{ define "delete_log_entry_list_item_response" }}
+
+{{ $totalCost := .TotalCost }}
+
+{{ $carId := .CarID }}
+
+{{ $logEntryCount := .LogEntryCount }}
+
+<turbo-stream action="remove" target="log-entries-list-item-{{ .LogEntry.ID }}">
+</turbo-stream>
+
+<turbo-stream action="update" target="total-cost-{{ $carId }}">
+    <template>
+        total: {{ FmtCurrency $totalCost }}
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="car-log-entry-count-{{ $carId }}">
+    <template>
+        {{ template "car_log_entry_count_text" $logEntryCount }}
+    </template>
+</turbo-stream>
+
+{{ end }}
