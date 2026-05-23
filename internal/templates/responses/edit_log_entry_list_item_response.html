@@ -1,0 +1,21 @@
+{{ define "edit_log_entry_list_item_response" }}
+
+{{ $logEntry := .LogEntry }}
+
+{{ $totalCost := .TotalCost }}
+
+{{ $carId := .CarID }}
+
+<turbo-stream action="replace" target="log-entries-list-item-{{ $logEntry.ID }}">
+    <template>
+        {{ template "log_entry_list_item" $logEntry }}
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="total-cost-{{ $carId }}">
+    <template>
+        total: {{ FmtCurrency $totalCost }}
+    </template>
+</turbo-stream>
+
+{{ end }}
