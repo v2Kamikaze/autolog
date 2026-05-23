@@ -23,6 +23,9 @@ func main() {
 		components := []string{
 
 			"internal/templates/components/icons.html",
+			"internal/templates/components/kanji_bg.html",
+			"internal/templates/components/car_silhouette.html",
+			"internal/templates/components/logo.html",
 			"internal/templates/components/add_car_modal.html",
 			"internal/templates/components/add_maintenance_modal.html",
 			"internal/templates/components/edit_car_modal.html",
@@ -40,6 +43,7 @@ func main() {
 		"home": load(
 			"internal/templates/pages/base_page.html",
 			"internal/templates/pages/home_page.html",
+			"internal/templates/partials/navigation_bar.html",
 			"internal/templates/partials/car_list.html",
 			"internal/templates/partials/car_list_item.html",
 			"internal/templates/partials/maintenance_list.html",
