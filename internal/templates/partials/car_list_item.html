@@ -1,7 +1,7 @@
 {{ define "car_list_item" }}
 
 {{ $car := . }}
-{{ $maintenanceCount := $car.MaintenanceCount }}
+{{ $logEntryCount := $car.LogEntryCount }}
 
 <div
     id="cars-list-item-{{ $car.ID }}"
@@ -21,8 +21,8 @@
                 {{ $car.Title }}
             </h2>
 
-            <p id="car-maintenance-count-{{ $car.ID }}" class="mt-2.5 text-xl font-bold tracking-widest text-neutral-400 uppercase">
-                {{ template "car_maintenance_count_text" $maintenanceCount }}
+            <p id="car-log-entry-count-{{ $car.ID }}" class="mt-2.5 text-xl font-bold tracking-widest text-neutral-400 uppercase">
+                {{ template "car_log_entry_count_text" $logEntryCount }}
             </p>
 
             <div class="mt-6 inline-flex items-center gap-3 border-2 border-neutral-100 bg-neutral-950 px-[18px] py-3.5 text-sm font-extrabold tracking-wide text-neutral-100 shadow-[4px_4px_0_0_#000]">
@@ -34,9 +34,9 @@
         <div class="absolute top-9 right-9 z-20 flex items-center gap-3 max-[1000px]:static max-[1000px]:self-end">
             <button
                 type="button"
-                title="Adicionar manutenção"
+                title="Adicionar novo log"
                 class="flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-100 bg-neutral-900 text-neutral-100 transition hover:-translate-y-0.5 hover:bg-neutral-100 hover:text-neutral-950"
-                x-on:click.stop="$dispatch('open-modal', { modalId: 'add-maintenance', data: { carId: {{ $car.ID }} } })"
+                x-on:click.stop="$dispatch('open-modal', { modalId: 'add-log-entry', data: { carId: {{ $car.ID }} } })"
             >
                 {{ template "icon_plus" "w-4 h-4" }}
             </button>
@@ -76,7 +76,7 @@
     </div>
 
     <div x-show="open" x-cloak x-transition class="border-t-[3px] border-neutral-100 bg-neutral-950 px-9 py-7">
-        {{ template "maintenance_list" $car }}
+        {{ template "log_entry_list" $car }}
     </div>
 
 </div>
