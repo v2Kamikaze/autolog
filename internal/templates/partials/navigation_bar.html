@@ -1,0 +1,29 @@
+{{ define "navigation_bar" }}
+
+<section class="relative mx-auto mb-10 flex w-[92%] max-w-[1300px] items-start justify-between max-[700px]:flex-col max-[700px]:gap-8">
+
+    <div>
+        {{ template "logo" }}
+        <p class="mt-4.5 text-sm tracking-widest text-neutral-500 uppercase">
+            Controle de manutenção dos seus veículos
+        </p>
+    </div>
+
+    <nav>
+        <ul class="flex flex-wrap gap-3.5">
+            <li>
+                <button
+                    type="button"
+                    x-data
+                    x-on:click="$dispatch('open-modal', { modalId: 'add-car', data: {} })"
+                    class="cursor-pointer border-2 border-neutral-100 bg-neutral-900 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-100 uppercase shadow-[5px_5px_0_0_#000] transition-transform duration-250 hover:-translate-y-1 hover:-rotate-3"
+                >
+                    Cadastrar novo carro
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+</section>
+
+{{ end }}
