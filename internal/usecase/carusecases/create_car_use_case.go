@@ -30,7 +30,7 @@ func (u *CreateCarUseCase) Execute(ctx context.Context, input CreateCarInput) (*
 		Title:        input.Title,
 		Type:         input.Type,
 		KM:           input.KM,
-		Maintenances: []*entities.Maintenance{},
+		LogEntries: []*entities.LogEntry{},
 	}
 
 	if err := u.carPersistence.CreateCar(ctx, car); err != nil {
