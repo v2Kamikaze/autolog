@@ -14,6 +14,10 @@
     <!-- Turbo -->
     <script src="/static/js/turbo.es2017-umd.js"></script>
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+
     <style>
       [x-cloak] {
         display: none !important;
@@ -23,11 +27,23 @@
     <title>Autolog</title>
   </head>
 
-  <body class="bg-white text-gray-900">
-    <div class="max-w-7xl mx-auto px-6 py-10">
+  <body
+    class="
+      min-h-screen overflow-x-hidden
+      font-sans text-neutral-100
+      bg-linear-to-b from-neutral-900 to-neutral-950
+      before:fixed before:inset-0 before:bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] before:bg-size-[6px_6px] before:opacity-[0.03] before:pointer-events-none before:content-['']
+    "
+  >
+    {{ template "kanji_bg" }}
+
+    <div class="mx-auto max-w-7xl px-6 py-10">
         {{ block "content" . }}
         {{ end }}
     </div>
+
+    {{ block "overlays" . }}
+    {{ end }}
 
  </body>
 </html>
