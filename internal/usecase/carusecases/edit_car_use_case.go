@@ -10,6 +10,7 @@ import (
 type EditCarInput struct {
 	ID    int
 	Title string
+	Type  string
 	KM    int
 }
 
@@ -31,6 +32,7 @@ func (uc *EditCarUseCase) Execute(ctx context.Context, input EditCarInput) (*Edi
 	patch := &entities.Car{
 		ID:    input.ID,
 		Title: input.Title,
+		Type:  input.Type,
 		KM:    input.KM,
 	}
 	car, err := uc.carPersistence.EditCar(ctx, patch)
