@@ -666,6 +666,9 @@
   .pr-12 {
     padding-right: calc(var(--spacing) * 12);
   }
+  .text-right {
+    text-align: right;
+  }
   .font-sans {
     font-family: var(--font-sans);
   }
