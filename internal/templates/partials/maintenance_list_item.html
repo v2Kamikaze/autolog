@@ -2,13 +2,36 @@
 
 {{ $maintenance := . }}
 
-<li id="maintenances-list-item-{{ $maintenance.ID }}" class="grid grid-cols-5 px-1 items-center">
-    <span>{{ $maintenance.Name }}</span>
-    <span>{{ FmtDate $maintenance.Date }}</span>
-    <span>{{ $maintenance.KM }} km</span>
-    <span class="text-right">{{ FmtCurrency $maintenance.Cost }}</span>
-    <div class="flex justify-end items-center gap-2">
+<div
+    id="maintenances-list-item-{{ $maintenance.ID }}"
+    class="grid grid-cols-[2fr_1fr_1fr_1fr_auto] items-center gap-[18px] border-2 border-neutral-800 bg-neutral-900 p-[18px] transition hover:translate-x-1 hover:border-neutral-100 max-[1100px]:grid-cols-1"
+>
+
+    <div class="flex flex-col gap-1">
+        <div class="text-[15px] font-bold text-neutral-100">{{ $maintenance.Name }}</div>
+        <div class="text-xs tracking-widest text-neutral-500 uppercase">registro de serviço</div>
+    </div>
+
+    <div>
+        <div class="mb-1 text-[10px] tracking-widest text-neutral-500 uppercase">Data</div>
+        <div class="text-sm font-bold text-neutral-100">{{ FmtDate $maintenance.Date }}</div>
+    </div>
+
+    <div>
+        <div class="mb-1 text-[10px] tracking-widest text-neutral-500 uppercase">KM</div>
+        <div class="text-sm font-bold text-neutral-100">{{ $maintenance.KM }}</div>
+    </div>
+
+    <div>
+        <div class="mb-1 text-[10px] tracking-widest text-neutral-500 uppercase">Valor</div>
+        <div class="text-sm font-bold text-neutral-100">{{ FmtCurrency $maintenance.Cost }}</div>
+    </div>
+
+    <div class="flex gap-2">
         <button
+            type="button"
+            title="Editar manutenção"
+            class="flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-100 bg-neutral-900 text-neutral-100 transition hover:-translate-y-0.5 hover:bg-neutral-100 hover:text-neutral-950"
             x-on:click="$dispatch('open-modal', {
                 modalId: 'edit-maintenance',
                 data: {
@@ -20,25 +43,30 @@
                     cost: {{ $maintenance.Cost }}
                 }
             })"
-            class="bg-transparent border p-1 mb-1 border-black hover:bg-black hover:text-white hover:cursor-pointer transition">
+        >
             {{ template "icon_edit" "w-4 h-4" }}
         </button>
 
-        <button x-on:click="$dispatch('open-modal', {
-            modalId: 'delete-maintenance',
-            data: {
-                carId: {{ $maintenance.CarID }},
-                maintenanceId: {{ $maintenance.ID }},
-                name: '{{ $maintenance.Name }}',
-                date: '{{ FmtDate $maintenance.Date }}',
-                km: {{ $maintenance.KM }},
-                cost: {{ $maintenance.Cost }}
-            }
-        })"
-        class="bg-red-600 p-1 mb-1 hover:border-black hover:bg-black text-white hover:cursor-pointer transition">
-            {{ template "icon_thrash" "w-4 h-4" }}
+        <button
+            type="button"
+            title="Excluir manutenção"
+            class="flex size-11 cursor-pointer items-center justify-center border-2 border-orange-500 bg-orange-500 text-neutral-100 transition hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-neutral-950"
+            x-on:click="$dispatch('open-modal', {
+                modalId: 'delete-maintenance',
+                data: {
+                    carId: {{ $maintenance.CarID }},
+                    maintenanceId: {{ $maintenance.ID }},
+                    name: '{{ $maintenance.Name }}',
+                    date: '{{ FmtDate $maintenance.Date }}',
+                    km: {{ $maintenance.KM }},
+                    cost: {{ $maintenance.Cost }}
+                }
+            })"
+        >
+            {{ template "icon_x" "w-4 h-4" }}
         </button>
     </div>
-</li>
+
+</div>
 
 {{ end }}
