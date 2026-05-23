@@ -1,0 +1,10 @@
+{{ define "car_maintenance_count_text" }}
+{{- $count := . -}}
+{{- if le $count 0 -}}
+nenhuma manutenção registrada
+{{- else if eq $count 1 -}}
+1 manutenção registrada
+{{- else -}}
+{{ $count }} manutenções registradas
+{{- end -}}
+{{ end }}
