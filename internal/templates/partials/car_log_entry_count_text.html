@@ -1,0 +1,10 @@
+{{ define "car_log_entry_count_text" }}
+{{- $count := . -}}
+{{- if le $count 0 -}}
+nenhum log registrado
+{{- else if eq $count 1 -}}
+1 log registrado
+{{- else -}}
+{{ $count }} logs registrados
+{{- end -}}
+{{ end }}
