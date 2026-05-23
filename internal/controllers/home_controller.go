@@ -80,6 +80,7 @@ func (h *HomeHandler) CreateCar(w http.ResponseWriter, r *http.Request) {
 
 	output, err := h.createCarUseCase.Execute(r.Context(), carusecases.CreateCarInput{
 		Title: form.Title,
+		Type:  form.CarType,
 		KM:    form.KM,
 	})
 	if err != nil {
@@ -230,6 +231,7 @@ func (h *HomeHandler) EditCar(w http.ResponseWriter, r *http.Request) {
 	resp, err := h.editCarUseCase.Execute(r.Context(), carusecases.EditCarInput{
 		ID:    carIDInt,
 		Title: form.Title,
+		Type:  form.CarType,
 		KM:    form.KM,
 	})
 	if err != nil {
