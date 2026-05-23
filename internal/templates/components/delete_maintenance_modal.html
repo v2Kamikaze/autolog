@@ -1,107 +1,64 @@
-{{/*
-    delete_maintenance_modal
-
-    Maintenance deletion modal.
-
-    Opens via: $dispatch('open-modal', { modalId: 'delete-maintenance', data: { carId, maintenanceId, name, date, km, cost } })
-    Closes via: close()
-    Auto closes on successful submit
-    Loading state during request (disabled submit + spinner)
-
-    data:
-    - carId: number (form action)
-    - maintenanceId: number (form action)
-    - name: string (confirmation message)
-    - date: string (confirmation message)
-    - km: number (confirmation message)
-    - cost: number in cents (confirmation message)
-
-    Form:
-    - method: DELETE
-    - action: /cars/{carId}/maintenances/{maintenanceId}
-*/}}
-
 {{ define "delete_maintenance_modal" }}
 
 <div
     x-data="ui_component_modal('delete-maintenance')"
     x-show="isOpen"
+    x-cloak
     x-transition
-    class="fixed inset-0 flex items-center justify-center"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4"
 >
-
-    <!-- OVERLAY -->
     <div
-        class="absolute inset-0 bg-black/50"
+        class="absolute inset-0 z-0 bg-black/80"
         x-on:click="close()"
     ></div>
 
-    <!-- MODAL -->
     <div
-        class="relative w-2xl p-4 bg-white"
+        class="relative z-10 w-full max-w-lg border-[3px] border-neutral-100 bg-neutral-900 p-8 shadow-[8px_8px_0_0_#000] sm:max-w-xl"
         x-on:click.stop
     >
-        <!-- X BUTTON -->
         <button
             type="button"
             x-on:click="close()"
-            class="absolute top-3 right-3 text-gray-500 hover:text-black cursor-pointer"
+            class="absolute top-6 right-6 flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-100 bg-neutral-900 text-neutral-100 transition hover:-translate-y-0.5 hover:bg-neutral-100 hover:text-neutral-950"
         >
-            {{ template "icon_x" "w-5 h-5" }}
+            {{ template "icon_x" "w-4 h-4" }}
         </button>
 
-        <h2 class="text-lg font-semibold mb-4">Excluir manutenção</h2>
-        <p class="text-gray-600 mb-4" x-text="`${data.name} (${data.date}) - ${data.km} km - ${(data.cost / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`"></p>
+        <h2 class="mb-4 pr-12 text-sm font-extrabold tracking-widest text-neutral-100 uppercase">Excluir manutenção</h2>
+        <p class="mb-6 text-sm text-neutral-400" x-text="`${data.name} (${data.date}) - ${data.km} km - ${(data.cost / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`"></p>
 
         <form
-            id="delete-maintenance-form"
             method="DELETE"
-
             x-data="{ loading: false }"
-
             x-bind:action="`/cars/${data.carId}/maintenances/${data.maintenanceId}`"
-
             x-on:turbo:submit-start="loading = true"
-
             x-on:turbo:submit-end="
                 loading = false;
-
                 if (event.detail.success) {
-                    $el.reset();
                     close();
                 }
             "
         >
-
-            <!-- ACTIONS -->
-            <div class="flex justify-end gap-2 mt-6">
-
-                <!-- CANCEL -->
+            <div class="flex justify-end gap-3">
                 <button
                     type="button"
                     x-on:click="close()"
-                    class="border border-gray-300 px-4 py-2 text-sm hover:border-black cursor-pointer transition"
+                    class="cursor-pointer border-2 border-neutral-100 bg-neutral-900 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-100 uppercase shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
                 >
                     Cancelar
                 </button>
-
-                <!-- SUBMIT -->
                 <button
                     type="submit"
                     x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }"
-                    class="bg-red-600 text-white px-4 py-2 text-sm hover:bg-black hover:text-white cursor-pointer transition flex items-center gap-2"
+                    class="flex cursor-pointer items-center gap-2 border-2 border-orange-500 bg-orange-500 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-100 uppercase shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3 hover:border-white hover:bg-white hover:text-neutral-950"
                 >
                     <span x-show="loading" class="inline-flex shrink-0">
                         {{ template "icon_loader" "w-4 h-4 animate-spin" }}
                     </span>
-
                     <span x-text="loading ? 'Excluindo...' : 'Excluir'"></span>
                 </button>
-
             </div>
-
         </form>
-
     </div>
 </div>
 
