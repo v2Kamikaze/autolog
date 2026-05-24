@@ -36,7 +36,7 @@
                 modalId: 'edit-log-entry',
                 data: {
                     id: {{ $entry.ID }},
-                    carId: {{ $entry.CarID }},
+                    vehicleId: {{ $entry.VehicleID }},
                     name: '{{ $entry.Name }}',
                     entryType: '{{ $entry.Type }}',
                     date: '{{ ToDate $entry.Date }}',
@@ -55,7 +55,7 @@
             x-on:click="$dispatch('open-modal', {
                 modalId: 'delete-log-entry',
                 data: {
-                    carId: {{ $entry.CarID }},
+                    vehicleId: {{ $entry.VehicleID }},
                     logEntryId: {{ $entry.ID }},
                     name: '{{ $entry.Name }}',
                     date: '{{ FmtDate $entry.Date }}',

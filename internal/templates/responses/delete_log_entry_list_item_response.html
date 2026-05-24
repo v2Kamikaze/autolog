@@ -2,22 +2,22 @@
 
 {{ $totalCost := .TotalCost }}
 
-{{ $carId := .CarID }}
+{{ $vehicleId := .VehicleID }}
 
 {{ $logEntryCount := .LogEntryCount }}
 
 <turbo-stream action="remove" target="log-entries-list-item-{{ .LogEntry.ID }}">
 </turbo-stream>
 
-<turbo-stream action="update" target="total-cost-{{ $carId }}">
+<turbo-stream action="update" target="total-cost-{{ $vehicleId }}">
     <template>
         total: {{ FmtCurrency $totalCost }}
     </template>
 </turbo-stream>
 
-<turbo-stream action="update" target="car-log-entry-count-{{ $carId }}">
+<turbo-stream action="update" target="vehicle-log-entry-count-{{ $vehicleId }}">
     <template>
-        {{ template "car_log_entry_count_text" $logEntryCount }}
+        {{ template "vehicle_log_entry_count_text" $logEntryCount }}
     </template>
 </turbo-stream>
 

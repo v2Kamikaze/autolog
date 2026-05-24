@@ -1,4 +1,4 @@
-package carusecases
+package vehicleusecases
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 )
 
 type EditLogEntryInput struct {
-	CarID      int
+	VehicleID      int
 	LogEntryID int
 	Name       string
 	Type       entities.LogEntryCategory
@@ -19,17 +19,17 @@ type EditLogEntryInput struct {
 }
 
 type EditLogEntryResponse struct {
-	CarID    int
+	VehicleID    int
 	LogEntry *entities.LogEntry
 	TotalCost int
 }
 
 type EditLogEntryUseCase struct {
-	carPersistence persistence.CarPersistence
+	vehiclePersistence persistence.VehiclePersistence
 }
 
-func NewEditLogEntryUseCase(carPersistence persistence.CarPersistence) *EditLogEntryUseCase {
-	return &EditLogEntryUseCase{carPersistence: carPersistence}
+func NewEditLogEntryUseCase(vehiclePersistence persistence.VehiclePersistence) *EditLogEntryUseCase {
+	return &EditLogEntryUseCase{vehiclePersistence: vehiclePersistence}
 }
 
 func (u *EditLogEntryUseCase) Execute(ctx context.Context, input EditLogEntryInput) (*EditLogEntryResponse, error) {
@@ -44,19 +44,19 @@ func (u *EditLogEntryUseCase) Execute(ctx context.Context, input EditLogEntryInp
 		KM:   input.KM,
 		Cost: input.Cost,
 	}
-	updated, err := u.carPersistence.EditLogEntry(ctx, input.CarID, input.LogEntryID, patch)
+	updated, err := u.vehiclePersistence.EditLogEntry(ctx, input.VehicleID, input.LogEntryID, patch)
 	if err != nil {
 		return nil, err
 	}
 
-	car, err := u.carPersistence.GetCarByID(ctx, input.CarID)
+	vehicle, err := u.vehiclePersistence.GetVehicleByID(ctx, input.VehicleID)
 	if err != nil {
 		return nil, err
 	}
 
 	return &EditLogEntryResponse{
-		CarID:     input.CarID,
+		VehicleID:     input.VehicleID,
 		LogEntry:  updated,
-		TotalCost: car.TotalCost(),
+		TotalCost: vehicle.TotalCost(),
 	}, nil
 }

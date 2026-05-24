@@ -40,7 +40,7 @@
                     e.target.value = this.formatCents(this.cents)
                 }
             }"
-            x-bind:action="`/cars/${data.carId}/log-entries`"
+            x-bind:action="`/vehicles/${data.vehicleId}/log-entries`"
             x-on:turbo:submit-start="loading = true"
             x-on:turbo:submit-end="
                 loading = false;

@@ -1,12 +1,12 @@
 {{ define "log_entry_list" }}
 
-{{ $car := . }}
-{{ $logEntries := $car.LogEntries }}
+{{ $vehicle := . }}
+{{ $logEntries := $vehicle.LogEntries }}
 
 <div>
     <div class="mb-[22px] text-xs tracking-[0.25em] text-neutral-500 uppercase">histórico de logs</div>
 
-    <div id="log-entries-list-{{ $car.ID }}" class="flex flex-col gap-3.5">
+    <div id="log-entries-list-{{ $vehicle.ID }}" class="flex flex-col gap-3.5">
         {{ if $logEntries }}
             {{ range $logEntries }}
                 {{ template "log_entry_list_item" . }}
@@ -16,8 +16,8 @@
         {{ end }}
     </div>
 
-    <div id="total-cost-{{ $car.ID }}" class="mt-6 text-right text-sm font-extrabold text-neutral-900 uppercase dark:text-neutral-100">
-        total: {{ FmtCurrency $car.TotalCost }}
+    <div id="total-cost-{{ $vehicle.ID }}" class="mt-6 text-right text-sm font-extrabold text-neutral-900 uppercase dark:text-neutral-100">
+        total: {{ FmtCurrency $vehicle.TotalCost }}
     </div>
 </div>
 

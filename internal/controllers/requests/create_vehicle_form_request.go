@@ -1,7 +1,7 @@
 package requests
 
-type CreateCarFormRequest struct {
+type CreateVehicleFormRequest struct {
 	Title    string `schema:"title"`
-	CarType  string `schema:"car_type"`
+	VehicleType  string `schema:"vehicle_type"`
 	KM       int    `schema:"km"`
 }

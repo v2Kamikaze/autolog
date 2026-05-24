@@ -1,6 +1,6 @@
 {{ define "content" }}
 
-{{ $cars := .Cars }}
+{{ $vehicles := .Vehicles }}
 
 <script>
 document.addEventListener('alpine:init', () => {
@@ -52,17 +52,17 @@ document.addEventListener('alpine:init', () => {
 
 {{ template "navigation_bar" }}
 
-{{ template "car_list" $cars }}
+{{ template "vehicle_list" $vehicles }}
 
 {{ end }}
 
 {{ define "overlays" }}
 
-{{ template "add_car_modal" }}
+{{ template "add_vehicle_modal" }}
 {{ template "add_log_entry_modal" }}
-{{ template "edit_car_modal" }}
+{{ template "edit_vehicle_modal" }}
 {{ template "edit_log_entry_modal" }}
-{{ template "delete_car_modal" }}
+{{ template "delete_vehicle_modal" }}
 {{ template "delete_log_entry_modal" }}
 
 {{ end }}

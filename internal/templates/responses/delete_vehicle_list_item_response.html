@@ -1,0 +1,6 @@
+{{ define "delete_vehicle_list_item_response" }}
+
+<turbo-stream action="remove" target="vehicles-list-item-{{ .Vehicle.ID }}">
+</turbo-stream>
+
+{{ end }}

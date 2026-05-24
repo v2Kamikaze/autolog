@@ -30,7 +30,7 @@
         <form
             method="DELETE"
             x-data="{ loading: false }"
-            x-bind:action="`/cars/${data.carId}/log-entries/${data.logEntryId}`"
+            x-bind:action="`/vehicles/${data.vehicleId}/log-entries/${data.logEntryId}`"
             x-on:turbo:submit-start="loading = true"
             x-on:turbo:submit-end="
                 loading = false;

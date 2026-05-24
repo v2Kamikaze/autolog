@@ -26,7 +26,7 @@ func (c LogEntryCategory) Label() string {
 
 type LogEntry struct {
 	ID    int
-	CarID int
+	VehicleID int
 	Name  string
 	Type  LogEntryCategory
 	Date  time.Time

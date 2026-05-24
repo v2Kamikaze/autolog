@@ -1,0 +1,11 @@
+{{ define "edit_vehicle_list_item_response" }}
+
+{{ $vehicle := .Vehicle }}
+
+<turbo-stream action="replace" target="vehicles-list-item-{{ $vehicle.ID }}">
+    <template>
+        {{ template "vehicle_list_item" $vehicle }}
+    </template>
+</turbo-stream>
+
+{{ end }}

@@ -1,7 +1,7 @@
-{{ define "delete_car_modal" }}
+{{ define "delete_vehicle_modal" }}
 
 <div
-    x-data="ui_component_modal('delete-car')"
+    x-data="ui_component_modal('delete-vehicle')"
     x-show="isOpen"
     x-cloak
     x-transition
@@ -30,7 +30,7 @@
         <form
             method="DELETE"
             x-data="{ loading: false }"
-            x-bind:action="`/cars/${data.carId}`"
+            x-bind:action="`/vehicles/${data.vehicleId}`"
             x-on:turbo:submit-start="loading = true"
             x-on:turbo:submit-end="
                 loading = false;

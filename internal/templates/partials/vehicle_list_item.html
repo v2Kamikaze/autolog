@@ -1,10 +1,10 @@
-{{ define "car_list_item" }}
+{{ define "vehicle_list_item" }}
 
-{{ $car := . }}
-{{ $logEntryCount := $car.LogEntryCount }}
+{{ $vehicle := . }}
+{{ $logEntryCount := $vehicle.LogEntryCount }}
 
 <div
-    id="cars-list-item-{{ $car.ID }}"
+    id="vehicles-list-item-{{ $vehicle.ID }}"
     x-data="{ open: false }"
     class="relative isolate overflow-hidden border-[3px] border-neutral-900 bg-neutral-50 shadow-[8px_8px_0_0_#000] transition-transform duration-250 hover:-translate-y-1 dark:border-neutral-100 dark:bg-neutral-900"
 >
@@ -14,20 +14,20 @@
     >
         <div class="relative z-10 min-w-0 flex-1 pr-4 max-[1000px]:w-full max-[1000px]:pr-0">
             <span class="mb-[18px] inline-block border-2 border-neutral-900 bg-neutral-900 px-3.5 py-2 text-xs font-extrabold tracking-widest text-neutral-50 uppercase dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-950">
-                {{ if $car.Type }}{{ $car.Type }}{{ else }}—{{ end }}
+                {{ if $vehicle.Type }}{{ $vehicle.Type }}{{ else }}—{{ end }}
             </span>
 
             <h2 class="text-7xl leading-[0.85] font-extrabold tracking-tighter text-neutral-900 lowercase break-words -skew-x-6 max-[700px]:text-4xl dark:text-neutral-100">
-                {{ $car.Title }}
+                {{ $vehicle.Title }}
             </h2>
 
-            <p id="car-log-entry-count-{{ $car.ID }}" class="mt-2.5 text-xl font-bold tracking-widest text-neutral-600 uppercase dark:text-neutral-400">
-                {{ template "car_log_entry_count_text" $logEntryCount }}
+            <p id="vehicle-log-entry-count-{{ $vehicle.ID }}" class="mt-2.5 text-xl font-bold tracking-widest text-neutral-600 uppercase dark:text-neutral-400">
+                {{ template "vehicle_log_entry_count_text" $logEntryCount }}
             </p>
 
             <div class="mt-6 inline-flex items-center gap-3 border-2 border-neutral-900 bg-white px-[18px] py-3.5 text-sm font-extrabold tracking-wide text-neutral-900 shadow-[4px_4px_0_0_#000] dark:border-neutral-100 dark:bg-neutral-950 dark:text-neutral-100">
                 {{ template "icon_gauge" "w-4 h-4 shrink-0" }}
-                <span>{{ $car.KM }} km</span>
+                <span>{{ $vehicle.KM }} km</span>
             </div>
         </div>
 
@@ -36,7 +36,7 @@
                 type="button"
                 title="Adicionar novo log"
                 class="flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-900 bg-neutral-50 text-neutral-900 transition hover:-translate-y-0.5 hover:bg-neutral-900 hover:text-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-950"
-                x-on:click.stop="$dispatch('open-modal', { modalId: 'add-log-entry', data: { carId: {{ $car.ID }} } })"
+                x-on:click.stop="$dispatch('open-modal', { modalId: 'add-log-entry', data: { vehicleId: {{ $vehicle.ID }} } })"
             >
                 {{ template "icon_plus" "w-4 h-4" }}
             </button>
@@ -45,7 +45,7 @@
                 type="button"
                 title="Editar veículo"
                 class="flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-900 bg-neutral-50 text-neutral-900 transition hover:-translate-y-0.5 hover:bg-neutral-900 hover:text-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-950"
-                x-on:click.stop="$dispatch('open-modal', { modalId: 'edit-car', data: { carId: {{ $car.ID }}, title: '{{ $car.Title }}', carType: '{{ $car.Type }}', km: {{ $car.KM }} } })"
+                x-on:click.stop="$dispatch('open-modal', { modalId: 'edit-vehicle', data: { vehicleId: {{ $vehicle.ID }}, title: '{{ $vehicle.Title }}', vehicleType: '{{ $vehicle.Type }}', km: {{ $vehicle.KM }} } })"
             >
                 {{ template "icon_edit" "w-4 h-4" }}
             </button>
@@ -54,7 +54,7 @@
                 type="button"
                 title="Excluir veículo"
                 class="flex size-11 cursor-pointer items-center justify-center border-2 border-orange-500 bg-orange-500 text-neutral-100 transition hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-neutral-950"
-                x-on:click.stop="$dispatch('open-modal', { modalId: 'delete-car', data: { carId: {{ $car.ID }}, title: '{{ $car.Title }}', km: {{ $car.KM }} } })"
+                x-on:click.stop="$dispatch('open-modal', { modalId: 'delete-vehicle', data: { vehicleId: {{ $vehicle.ID }}, title: '{{ $vehicle.Title }}', km: {{ $vehicle.KM }} } })"
             >
                 {{ template "icon_x" "w-4 h-4" }}
             </button>
@@ -75,7 +75,7 @@
     </div>
 
     <div x-show="open" x-cloak x-transition class="border-t-[3px] border-neutral-900 bg-white px-9 py-7 dark:border-neutral-100 dark:bg-neutral-950">
-        {{ template "log_entry_list" $car }}
+        {{ template "log_entry_list" $vehicle }}
     </div>
 
 </div>

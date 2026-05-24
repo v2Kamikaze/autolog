@@ -1,0 +1,15 @@
+{{ define "vehicle_list" }}
+
+{{ $vehicles := . }}
+
+<div id="vehicles-list" class="mx-auto flex w-full max-w-[1300px] flex-col gap-7">
+    {{ if $vehicles}}
+        {{ range $vehicles }}
+            {{ template "vehicle_list_item" . }}
+        {{ end }}
+    {{ else }}
+        <p class="text-sm text-neutral-500">Ainda não possui nenhum veículo registrado.</p>
+    {{ end }}
+</div>
+
+{{ end }}

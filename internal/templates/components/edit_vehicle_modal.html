@@ -1,7 +1,7 @@
-{{ define "add_car_modal" }}
+{{ define "edit_vehicle_modal" }}
 
 <div
-    x-data="ui_component_modal('add-car')"
+    x-data="ui_component_modal('edit-vehicle')"
     x-show="isOpen"
     x-cloak
     x-transition
@@ -24,13 +24,12 @@
             {{ template "icon_x" "w-4 h-4" }}
         </button>
 
-        <h2 class="mb-6 pr-12 text-sm font-extrabold tracking-widest text-neutral-900 uppercase dark:text-neutral-100">Novo veículo</h2>
+        <h2 class="mb-6 pr-12 text-sm font-extrabold tracking-widest text-neutral-900 uppercase dark:text-neutral-100">Editar veículo</h2>
 
         <form
-            id="add-car-form"
-            method="POST"
-            action="/cars"
+            method="PUT"
             x-data="{ loading: false }"
+            x-bind:action="`/vehicles/${data.vehicleId}`"
             x-on:turbo:submit-start="loading = true"
             x-on:turbo:submit-end="
                 loading = false;
@@ -45,6 +44,7 @@
                 <input
                     name="title"
                     required
+                    x-bind:value="data.title || ''"
                     class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:border-neutral-100 focus:outline-none"
                 >
             </div>
@@ -52,9 +52,10 @@
             <div class="mb-4">
                 <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Tipo</label>
                 <input
-                    name="car_type"
+                    name="vehicle_type"
                     required
                     placeholder="sedan, hatch, suv..."
+                    x-bind:value="data.vehicleType || ''"
                     class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-600 focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:border-neutral-100 focus:outline-none"
                 >
             </div>
@@ -65,6 +66,7 @@
                     type="number"
                     name="km"
                     required
+                    x-bind:value="data.km || ''"
                     class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:border-neutral-100 focus:outline-none"
                 >
             </div>
@@ -85,7 +87,7 @@
                     <span x-show="loading" class="inline-flex shrink-0">
                         {{ template "icon_loader" "w-4 h-4 animate-spin" }}
                     </span>
-                    <span x-text="loading ? 'Cadastrando...' : 'Cadastrar'"></span>
+                    <span x-text="loading ? 'Editando...' : 'Editar'"></span>
                 </button>
             </div>
         </form>

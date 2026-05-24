@@ -11,43 +11,43 @@ import (
 	"github.com/v2code/autolog/internal/controllers/requests"
 	"github.com/v2code/autolog/internal/persistence"
 	"github.com/v2code/autolog/internal/persistence/entities"
-	"github.com/v2code/autolog/internal/usecase/carusecases"
+	"github.com/v2code/autolog/internal/usecase/vehicleusecases"
 )
 
 const TurboStreamContentType = "text/vnd.turbo-stream.html"
 
 type HomeHandler struct {
-	listCarsUseCase       *carusecases.ListCarsUseCase
-	createCarUseCase      *carusecases.CreateCarUseCase
-	addLogEntryUseCase    *carusecases.AddLogEntryUseCase
-	editLogEntryUseCase   *carusecases.EditLogEntryUseCase
-	editCarUseCase        *carusecases.EditCarUseCase
-	deleteCarUseCase      *carusecases.DeleteCarUseCase
-	deleteLogEntryUseCase *carusecases.DeleteLogEntryUseCase
+	listVehiclesUseCase       *vehicleusecases.ListVehiclesUseCase
+	createVehicleUseCase      *vehicleusecases.CreateVehicleUseCase
+	addLogEntryUseCase    *vehicleusecases.AddLogEntryUseCase
+	editLogEntryUseCase   *vehicleusecases.EditLogEntryUseCase
+	editVehicleUseCase        *vehicleusecases.EditVehicleUseCase
+	deleteVehicleUseCase      *vehicleusecases.DeleteVehicleUseCase
+	deleteLogEntryUseCase *vehicleusecases.DeleteLogEntryUseCase
 	formDecoder           *schema.Decoder
 	tmpl                  *template.Template
 }
 
 func NewHomeHandler(
-	listCarsUseCase *carusecases.ListCarsUseCase,
-	createCarUseCase *carusecases.CreateCarUseCase,
-	addLogEntryUseCase *carusecases.AddLogEntryUseCase,
-	editLogEntryUseCase *carusecases.EditLogEntryUseCase,
-	editCarUseCase *carusecases.EditCarUseCase,
-	deleteCarUseCase *carusecases.DeleteCarUseCase,
-	deleteLogEntryUseCase *carusecases.DeleteLogEntryUseCase,
+	listVehiclesUseCase *vehicleusecases.ListVehiclesUseCase,
+	createVehicleUseCase *vehicleusecases.CreateVehicleUseCase,
+	addLogEntryUseCase *vehicleusecases.AddLogEntryUseCase,
+	editLogEntryUseCase *vehicleusecases.EditLogEntryUseCase,
+	editVehicleUseCase *vehicleusecases.EditVehicleUseCase,
+	deleteVehicleUseCase *vehicleusecases.DeleteVehicleUseCase,
+	deleteLogEntryUseCase *vehicleusecases.DeleteLogEntryUseCase,
 	tmpl *template.Template,
 ) *HomeHandler {
 	formDecoder := schema.NewDecoder()
 	formDecoder.IgnoreUnknownKeys(true)
 
 	return &HomeHandler{
-		listCarsUseCase:       listCarsUseCase,
-		createCarUseCase:      createCarUseCase,
+		listVehiclesUseCase:       listVehiclesUseCase,
+		createVehicleUseCase:      createVehicleUseCase,
 		addLogEntryUseCase:    addLogEntryUseCase,
 		editLogEntryUseCase:   editLogEntryUseCase,
-		editCarUseCase:        editCarUseCase,
-		deleteCarUseCase:      deleteCarUseCase,
+		editVehicleUseCase:        editVehicleUseCase,
+		deleteVehicleUseCase:      deleteVehicleUseCase,
 		deleteLogEntryUseCase: deleteLogEntryUseCase,
 		formDecoder:           formDecoder,
 		tmpl:                  tmpl,
@@ -55,9 +55,9 @@ func NewHomeHandler(
 }
 
 func (h *HomeHandler) Home(w http.ResponseWriter, r *http.Request) {
-	output, err := h.listCarsUseCase.Execute(r.Context())
+	output, err := h.listVehiclesUseCase.Execute(r.Context())
 	if err != nil {
-		http.Error(w, "failed to list cars", http.StatusInternalServerError)
+		http.Error(w, "failed to list vehicles", http.StatusInternalServerError)
 		return
 	}
 
@@ -67,31 +67,31 @@ func (h *HomeHandler) Home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *HomeHandler) CreateCar(w http.ResponseWriter, r *http.Request) {
+func (h *HomeHandler) CreateVehicle(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "failed to parse form", http.StatusBadRequest)
 		return
 	}
 
-	form := requests.CreateCarFormRequest{}
+	form := requests.CreateVehicleFormRequest{}
 	if err := h.formDecoder.Decode(&form, r.PostForm); err != nil {
 		http.Error(w, "invalid form data", http.StatusBadRequest)
 		return
 	}
 
-	output, err := h.createCarUseCase.Execute(r.Context(), carusecases.CreateCarInput{
+	output, err := h.createVehicleUseCase.Execute(r.Context(), vehicleusecases.CreateVehicleInput{
 		Title: form.Title,
-		Type:  form.CarType,
+		Type:  form.VehicleType,
 		KM:    form.KM,
 	})
 	if err != nil {
-		http.Error(w, "failed to create car", http.StatusInternalServerError)
+		http.Error(w, "failed to create vehicle", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", TurboStreamContentType)
 
-	if err := h.tmpl.ExecuteTemplate(w, "add_car_list_item_response", output); err != nil {
+	if err := h.tmpl.ExecuteTemplate(w, "add_vehicle_list_item_response", output); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -103,11 +103,11 @@ func (h *HomeHandler) AddLogEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	carID := r.PathValue("id")
+	vehicleID := r.PathValue("id")
 
-	carIDInt, err := strconv.Atoi(carID)
+	vehicleIDInt, err := strconv.Atoi(vehicleID)
 	if err != nil {
-		http.Error(w, "invalid car id", http.StatusBadRequest)
+		http.Error(w, "invalid vehicle id", http.StatusBadRequest)
 		return
 	}
 
@@ -123,8 +123,8 @@ func (h *HomeHandler) AddLogEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	output, err := h.addLogEntryUseCase.Execute(r.Context(), carusecases.AddLogEntryInput{
-		CarID: carIDInt,
+	output, err := h.addLogEntryUseCase.Execute(r.Context(), vehicleusecases.AddLogEntryInput{
+		VehicleID: vehicleIDInt,
 		Name:  form.Name,
 		Type:  entities.LogEntryCategory(form.EntryType),
 		Date:  dateTime,
@@ -132,8 +132,8 @@ func (h *HomeHandler) AddLogEntry(w http.ResponseWriter, r *http.Request) {
 		Cost:  form.Cost,
 	})
 	if err != nil {
-		if errors.Is(err, persistence.ErrCarNotFound) {
-			http.Error(w, "car not found", http.StatusNotFound)
+		if errors.Is(err, persistence.ErrVehicleNotFound) {
+			http.Error(w, "vehicle not found", http.StatusNotFound)
 			return
 		}
 		if errors.Is(err, persistence.ErrInvalidLogEntryType) {
@@ -158,12 +158,12 @@ func (h *HomeHandler) EditLogEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	carID := r.PathValue("carId")
+	vehicleID := r.PathValue("vehicleId")
 	logEntryID := r.PathValue("logEntryId")
 
-	carIDInt, err := strconv.Atoi(carID)
+	vehicleIDInt, err := strconv.Atoi(vehicleID)
 	if err != nil {
-		http.Error(w, "invalid car id", http.StatusBadRequest)
+		http.Error(w, "invalid vehicle id", http.StatusBadRequest)
 		return
 	}
 
@@ -185,8 +185,8 @@ func (h *HomeHandler) EditLogEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	output, err := h.editLogEntryUseCase.Execute(r.Context(), carusecases.EditLogEntryInput{
-		CarID:      carIDInt,
+	output, err := h.editLogEntryUseCase.Execute(r.Context(), vehicleusecases.EditLogEntryInput{
+		VehicleID:      vehicleIDInt,
 		LogEntryID: logEntryIDInt,
 		Name:       form.Name,
 		Type:       entities.LogEntryCategory(form.EntryType),
@@ -195,8 +195,8 @@ func (h *HomeHandler) EditLogEntry(w http.ResponseWriter, r *http.Request) {
 		Cost:       form.Cost,
 	})
 	if err != nil {
-		if errors.Is(err, persistence.ErrCarNotFound) {
-			http.Error(w, "car not found", http.StatusNotFound)
+		if errors.Is(err, persistence.ErrVehicleNotFound) {
+			http.Error(w, "vehicle not found", http.StatusNotFound)
 			return
 		}
 		if errors.Is(err, persistence.ErrLogEntryNotFound) {
@@ -219,82 +219,82 @@ func (h *HomeHandler) EditLogEntry(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *HomeHandler) EditCar(w http.ResponseWriter, r *http.Request) {
+func (h *HomeHandler) EditVehicle(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "failed to parse form", http.StatusBadRequest)
 		return
 	}
 
-	form := requests.EditCarFormRequest{}
+	form := requests.EditVehicleFormRequest{}
 	if err := h.formDecoder.Decode(&form, r.PostForm); err != nil {
 		http.Error(w, "invalid form data", http.StatusBadRequest)
 		return
 	}
 
-	carID := r.PathValue("id")
+	vehicleID := r.PathValue("id")
 
-	carIDInt, err := strconv.Atoi(carID)
+	vehicleIDInt, err := strconv.Atoi(vehicleID)
 	if err != nil {
-		http.Error(w, "invalid car id", http.StatusBadRequest)
+		http.Error(w, "invalid vehicle id", http.StatusBadRequest)
 		return
 	}
 
-	resp, err := h.editCarUseCase.Execute(r.Context(), carusecases.EditCarInput{
-		ID:    carIDInt,
+	resp, err := h.editVehicleUseCase.Execute(r.Context(), vehicleusecases.EditVehicleInput{
+		ID:    vehicleIDInt,
 		Title: form.Title,
-		Type:  form.CarType,
+		Type:  form.VehicleType,
 		KM:    form.KM,
 	})
 	if err != nil {
-		if errors.Is(err, persistence.ErrCarNotFound) {
-			http.Error(w, "car not found", http.StatusNotFound)
+		if errors.Is(err, persistence.ErrVehicleNotFound) {
+			http.Error(w, "vehicle not found", http.StatusNotFound)
 			return
 		}
-		http.Error(w, "failed to edit car", http.StatusInternalServerError)
+		http.Error(w, "failed to edit vehicle", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", TurboStreamContentType)
 
-	if err := h.tmpl.ExecuteTemplate(w, "edit_car_list_item_response", resp); err != nil {
+	if err := h.tmpl.ExecuteTemplate(w, "edit_vehicle_list_item_response", resp); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
 
-func (h *HomeHandler) DeleteCar(w http.ResponseWriter, r *http.Request) {
-	carID := r.PathValue("id")
+func (h *HomeHandler) DeleteVehicle(w http.ResponseWriter, r *http.Request) {
+	vehicleID := r.PathValue("id")
 
-	carIDInt, err := strconv.Atoi(carID)
+	vehicleIDInt, err := strconv.Atoi(vehicleID)
 	if err != nil {
-		http.Error(w, "invalid car id", http.StatusBadRequest)
+		http.Error(w, "invalid vehicle id", http.StatusBadRequest)
 		return
 	}
 
-	resp, err := h.deleteCarUseCase.Execute(r.Context(), carusecases.DeleteCarInput{
-		ID: carIDInt,
+	resp, err := h.deleteVehicleUseCase.Execute(r.Context(), vehicleusecases.DeleteVehicleInput{
+		ID: vehicleIDInt,
 	})
 
 	if err != nil {
-		http.Error(w, "failed to delete car", http.StatusInternalServerError)
+		http.Error(w, "failed to delete vehicle", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", TurboStreamContentType)
 
-	if err := h.tmpl.ExecuteTemplate(w, "delete_car_list_item_response", resp); err != nil {
+	if err := h.tmpl.ExecuteTemplate(w, "delete_vehicle_list_item_response", resp); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
 
 func (h *HomeHandler) DeleteLogEntry(w http.ResponseWriter, r *http.Request) {
-	carID := r.PathValue("carId")
+	vehicleID := r.PathValue("vehicleId")
 	logEntryID := r.PathValue("logEntryId")
 
-	carIDInt, err := strconv.Atoi(carID)
+	vehicleIDInt, err := strconv.Atoi(vehicleID)
 	if err != nil {
-		http.Error(w, "invalid car id", http.StatusBadRequest)
+		http.Error(w, "invalid vehicle id", http.StatusBadRequest)
 		return
 	}
 
@@ -304,8 +304,8 @@ func (h *HomeHandler) DeleteLogEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := h.deleteLogEntryUseCase.Execute(r.Context(), carusecases.DeleteLogEntryInput{
-		CarID:      carIDInt,
+	resp, err := h.deleteLogEntryUseCase.Execute(r.Context(), vehicleusecases.DeleteLogEntryInput{
+		VehicleID:      vehicleIDInt,
 		LogEntryID: logEntryIDInt,
 	})
 

@@ -1,4 +1,4 @@
-package carusecases
+package vehicleusecases
 
 import (
 	"context"
@@ -8,42 +8,42 @@ import (
 )
 
 type DeleteLogEntryInput struct {
-	CarID      int
+	VehicleID      int
 	LogEntryID int
 }
 
 type DeleteLogEntryResponse struct {
-	CarID         int
+	VehicleID         int
 	TotalCost     int
 	LogEntryCount int
 	LogEntry      *entities.LogEntry
 }
 
 type DeleteLogEntryUseCase struct {
-	carPersistence persistence.CarPersistence
+	vehiclePersistence persistence.VehiclePersistence
 }
 
-func NewDeleteLogEntryUseCase(carPersistence persistence.CarPersistence) *DeleteLogEntryUseCase {
+func NewDeleteLogEntryUseCase(vehiclePersistence persistence.VehiclePersistence) *DeleteLogEntryUseCase {
 	return &DeleteLogEntryUseCase{
-		carPersistence: carPersistence,
+		vehiclePersistence: vehiclePersistence,
 	}
 }
 
 func (u *DeleteLogEntryUseCase) Execute(ctx context.Context, input DeleteLogEntryInput) (*DeleteLogEntryResponse, error) {
-	logEntry, err := u.carPersistence.DeleteLogEntry(ctx, input.CarID, input.LogEntryID)
+	logEntry, err := u.vehiclePersistence.DeleteLogEntry(ctx, input.VehicleID, input.LogEntryID)
 	if err != nil {
 		return nil, err
 	}
 
-	car, err := u.carPersistence.GetCarByID(ctx, input.CarID)
+	vehicle, err := u.vehiclePersistence.GetVehicleByID(ctx, input.VehicleID)
 	if err != nil {
 		return nil, err
 	}
 
 	return &DeleteLogEntryResponse{
-		CarID:         car.ID,
-		TotalCost:     car.TotalCost(),
-		LogEntryCount: car.LogEntryCount(),
+		VehicleID:         vehicle.ID,
+		TotalCost:     vehicle.TotalCost(),
+		LogEntryCount: vehicle.LogEntryCount(),
 		LogEntry:      logEntry,
 	}, nil
 }
