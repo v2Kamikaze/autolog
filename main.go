@@ -24,7 +24,6 @@ func main() {
 
 			"internal/templates/components/icons.html",
 			"internal/templates/components/kanji_bg.html",
-			"internal/templates/components/car_silhouette.html",
 			"internal/templates/components/logo.html",
 			"internal/templates/components/add_car_modal.html",
 			"internal/templates/components/add_log_entry_modal.html",
