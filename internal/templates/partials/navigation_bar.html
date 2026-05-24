@@ -10,13 +10,26 @@
     </div>
 
     <nav>
-        <ul class="flex flex-wrap gap-3.5">
+        <ul class="flex flex-wrap items-center gap-3.5">
+            <li>
+                <button
+                    type="button"
+                    x-data="theme_switch"
+                    x-on:click="toggle()"
+                    x-bind:title="dark ? 'Ativar tema claro' : 'Ativar tema escuro'"
+                    x-bind:aria-label="dark ? 'Ativar tema claro' : 'Ativar tema escuro'"
+                    class="flex size-[52px] cursor-pointer items-center justify-center border-2 border-neutral-900 bg-neutral-50 text-neutral-900 shadow-[5px_5px_0_0_#000] transition-transform duration-250 hover:-translate-y-1 hover:-rotate-3 dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100"
+                >
+                    <span x-show="dark" x-cloak>{{ template "icon_sun" "w-5 h-5" }}</span>
+                    <span x-show="!dark" x-cloak>{{ template "icon_moon" "w-5 h-5" }}</span>
+                </button>
+            </li>
             <li>
                 <button
                     type="button"
                     x-data
                     x-on:click="$dispatch('open-modal', { modalId: 'add-car', data: {} })"
-                    class="cursor-pointer border-2 border-neutral-100 bg-neutral-900 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-100 uppercase shadow-[5px_5px_0_0_#000] transition-transform duration-250 hover:-translate-y-1 hover:-rotate-3"
+                    class="cursor-pointer border-2 border-neutral-900 bg-neutral-50 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-900 uppercase shadow-[5px_5px_0_0_#000] transition-transform duration-250 hover:-translate-y-1 hover:-rotate-3 dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100"
                 >
                     Cadastrar novo carro
                 </button>
