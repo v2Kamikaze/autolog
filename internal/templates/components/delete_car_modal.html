@@ -13,19 +13,19 @@
     ></div>
 
     <div
-        class="relative z-10 w-full max-w-lg border-[3px] border-neutral-100 bg-neutral-900 p-8 shadow-[8px_8px_0_0_#000] sm:max-w-xl"
+        class="relative z-10 w-full max-w-lg border-[3px] border-neutral-900 bg-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 p-8 shadow-[8px_8px_0_0_#000] sm:max-w-xl"
         x-on:click.stop
     >
         <button
             type="button"
             x-on:click="close()"
-            class="absolute top-6 right-6 flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-100 bg-neutral-900 text-neutral-100 transition hover:-translate-y-0.5 hover:bg-neutral-100 hover:text-neutral-950"
+            class="absolute top-6 right-6 flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-900 bg-neutral-50 text-neutral-900 transition hover:-translate-y-0.5 hover:bg-neutral-900 hover:text-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-950"
         >
             {{ template "icon_x" "w-4 h-4" }}
         </button>
 
-        <h2 class="mb-4 pr-12 text-sm font-extrabold tracking-widest text-neutral-100 uppercase">Excluir veículo</h2>
-        <p class="mb-6 text-sm text-neutral-400" x-text="`${data.title} (${data.km} km)`"></p>
+        <h2 class="mb-4 pr-12 text-sm font-extrabold tracking-widest text-neutral-900 uppercase dark:text-neutral-100">Excluir veículo</h2>
+        <p class="mb-6 text-sm text-neutral-600 dark:text-neutral-400" x-text="`${data.title} (${data.km} km)`"></p>
 
         <form
             method="DELETE"
@@ -43,7 +43,7 @@
                 <button
                     type="button"
                     x-on:click="close()"
-                    class="cursor-pointer border-2 border-neutral-100 bg-neutral-900 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-100 uppercase shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
+                    class="cursor-pointer border-2 border-neutral-900 bg-neutral-50 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-900 uppercase dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
                 >
                     Cancelar
                 </button>
