@@ -41,13 +41,12 @@
                 }
             }"
             x-bind:action="`/vehicles/${data.vehicleId}/log-entries/${data.id}`"
-            x-init="
-                cents = data.cost || 0;
-                $nextTick(() => {
-                    if ($refs.costInput) {
-                        $refs.costInput.value = formatCents(cents)
-                    }
-                })
+            x-effect="
+                if (!isOpen) return;
+                cents = data.cost ?? 0;
+                if ($refs.costInput) {
+                    $refs.costInput.value = formatCents(cents);
+                }
             "
             x-on:turbo:submit-start="loading = true"
             x-on:turbo:submit-end="
@@ -88,7 +87,7 @@
                     name="date"
                     required
                     x-bind:value="data.date || ''"
-                    class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 [color-scheme:light] focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:[color-scheme:dark] dark:focus:border-neutral-100 focus:outline-none"
+                    class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:border-neutral-100 focus:outline-none"
                 >
             </div>
 
