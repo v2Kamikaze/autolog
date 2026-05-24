@@ -12,7 +12,7 @@ import (
 	"github.com/v2code/autolog/internal/usecase/vehicleusecases"
 )
 
-//go:embed internal/templates/**/*.html
+//go:embed internal/templates
 var templateFiles embed.FS
 
 //go:embed static/**
@@ -22,15 +22,15 @@ func main() {
 	load := func(files ...string) *template.Template {
 		components := []string{
 
-			"internal/templates/components/icons.html",
-			"internal/templates/components/kanji_bg.html",
-			"internal/templates/components/logo.html",
-			"internal/templates/components/add_vehicle_modal.html",
-			"internal/templates/components/add_log_entry_modal.html",
-			"internal/templates/components/edit_vehicle_modal.html",
-			"internal/templates/components/edit_log_entry_modal.html",
-			"internal/templates/components/delete_vehicle_modal.html",
-			"internal/templates/components/delete_log_entry_modal.html",
+			"internal/templates/components/ui/icons.html",
+			"internal/templates/components/ui/kanji_bg.html",
+			"internal/templates/components/ui/logo.html",
+			"internal/templates/components/modals/add_vehicle_modal.html",
+			"internal/templates/components/modals/add_log_entry_modal.html",
+			"internal/templates/components/modals/edit_vehicle_modal.html",
+			"internal/templates/components/modals/edit_log_entry_modal.html",
+			"internal/templates/components/modals/delete_vehicle_modal.html",
+			"internal/templates/components/modals/delete_log_entry_modal.html",
 		}
 
 		files = append(files, components...)
