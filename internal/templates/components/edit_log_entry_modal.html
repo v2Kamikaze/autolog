@@ -13,18 +13,18 @@
     ></div>
 
     <div
-        class="relative z-10 w-full max-w-lg border-[3px] border-neutral-100 bg-neutral-900 p-8 shadow-[8px_8px_0_0_#000]"
+        class="relative z-10 w-full max-w-lg border-[3px] border-neutral-900 bg-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 p-8 shadow-[8px_8px_0_0_#000]"
         x-on:click.stop
     >
         <button
             type="button"
             x-on:click="close()"
-            class="absolute top-6 right-6 flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-100 bg-neutral-900 text-neutral-100 transition hover:-translate-y-0.5 hover:bg-neutral-100 hover:text-neutral-950"
+            class="absolute top-6 right-6 flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-900 bg-neutral-50 text-neutral-900 transition hover:-translate-y-0.5 hover:bg-neutral-900 hover:text-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-950"
         >
             {{ template "icon_x" "w-4 h-4" }}
         </button>
 
-        <h2 class="mb-6 pr-12 text-sm font-extrabold tracking-widest text-neutral-100 uppercase">Editar log</h2>
+        <h2 class="mb-6 pr-12 text-sm font-extrabold tracking-widest text-neutral-900 uppercase dark:text-neutral-100">Editar log</h2>
 
         <form
             method="PUT"
@@ -64,7 +64,7 @@
                 <select
                     name="entry_type"
                     required
-                    class="w-full border-2 border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 focus:border-neutral-100 focus:outline-none"
+                    class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:border-neutral-100 focus:outline-none"
                 >
                     <option value="maintenance" x-bind:selected="data.entryType === 'maintenance'">Manutenção</option>
                     <option value="expense" x-bind:selected="data.entryType === 'expense'">Despesa</option>
@@ -77,7 +77,7 @@
                     name="name"
                     required
                     x-bind:value="data.name || ''"
-                    class="w-full border-2 border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 focus:border-neutral-100 focus:outline-none"
+                    class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:border-neutral-100 focus:outline-none"
                 >
             </div>
 
@@ -88,7 +88,7 @@
                     name="date"
                     required
                     x-bind:value="data.date || ''"
-                    class="w-full border-2 border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 [color-scheme:dark] focus:border-neutral-100 focus:outline-none"
+                    class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 [color-scheme:light] focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:[color-scheme:dark] dark:focus:border-neutral-100 focus:outline-none"
                 >
             </div>
 
@@ -99,7 +99,7 @@
                     name="km"
                     required
                     x-bind:value="data.km || ''"
-                    class="w-full border-2 border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 focus:border-neutral-100 focus:outline-none"
+                    class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:border-neutral-100 focus:outline-none"
                 >
             </div>
 
@@ -110,7 +110,7 @@
                     inputmode="numeric"
                     x-ref="costInput"
                     x-on:input="handleInput"
-                    class="w-full border-2 border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 focus:border-neutral-100 focus:outline-none"
+                    class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:border-neutral-100 focus:outline-none"
                 >
                 <input type="hidden" name="cost" x-model="cents">
             </div>
@@ -119,14 +119,14 @@
                 <button
                     type="button"
                     x-on:click="close()"
-                    class="cursor-pointer border-2 border-neutral-100 bg-neutral-900 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-100 uppercase shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
+                    class="cursor-pointer border-2 border-neutral-900 bg-neutral-50 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-900 uppercase dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
                 >
                     Cancelar
                 </button>
                 <button
                     type="submit"
                     x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }"
-                    class="flex cursor-pointer items-center gap-2 border-2 border-neutral-100 bg-neutral-900 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-100 uppercase shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
+                    class="flex cursor-pointer items-center gap-2 border-2 border-neutral-900 bg-neutral-50 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-900 uppercase dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
                 >
                     <span x-show="loading" class="inline-flex shrink-0">
                         {{ template "icon_loader" "w-4 h-4 animate-spin" }}
