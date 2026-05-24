@@ -27,6 +27,26 @@ document.addEventListener('alpine:init', () => {
             this.data = {}
         },
     }))
+
+    Alpine.data('theme_switch', () => ({
+        dark: document.documentElement.classList.contains('dark'),
+
+        init() {
+            this.sync(document.documentElement.classList.contains('dark'))
+        },
+
+        toggle() {
+            this.sync(!this.dark)
+        },
+
+        sync(dark) {
+            this.dark = dark
+            document.documentElement.classList.toggle('dark', dark)
+            try {
+                localStorage.setItem('theme', dark ? 'dark' : 'light')
+            } catch (_) {}
+        },
+    }))
 })
 </script>
 
