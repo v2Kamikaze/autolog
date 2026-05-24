@@ -1,9 +1,23 @@
 {{ define "base_page" }}
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem("theme") === "light") {
+            document.documentElement.classList.remove("dark");
+          } else {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (_) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
 
     <!-- Tailwind -->
     <link rel="stylesheet" href="/static/css/output.css" />
@@ -30,9 +44,11 @@
   <body
     class="
       min-h-screen overflow-x-hidden
-      font-sans text-neutral-100
-      bg-linear-to-b from-neutral-900 to-neutral-950
-      before:fixed before:inset-0 before:bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] before:bg-size-[6px_6px] before:opacity-[0.03] before:pointer-events-none before:content-['']
+      font-sans text-neutral-900
+      bg-linear-to-b from-neutral-100 to-neutral-200
+      before:fixed before:inset-0 before:bg-[radial-gradient(rgba(0,0,0,0.12)_1px,transparent_1px)] before:bg-size-[6px_6px] before:opacity-[0.04] before:pointer-events-none before:content-['']
+      dark:text-neutral-100 dark:from-neutral-900 dark:to-neutral-950
+      dark:before:bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] dark:before:opacity-[0.03]
     "
   >
     {{ template "kanji_bg" }}
