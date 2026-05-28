@@ -4,12 +4,13 @@ import (
 	"embed"
 	"html/template"
 	"log"
-	"net/http"
+	nethttp "net/http"
 
-	"github.com/v2code/autolog/internal/controllers"
 	"github.com/v2code/autolog/internal/functions"
+	"github.com/v2code/autolog/internal/http"
 	"github.com/v2code/autolog/internal/persistence"
-	"github.com/v2code/autolog/internal/usecase/vehicleusecases"
+	"github.com/v2code/autolog/internal/ui"
+	"github.com/v2code/autolog/internal/vehicles"
 )
 
 //go:embed internal/templates
@@ -23,7 +24,6 @@ func main() {
 		components := []string{
 
 			"internal/templates/components/ui/icons.html",
-			"internal/templates/components/ui/kanji_bg.html",
 			"internal/templates/components/ui/logo.html",
 			"internal/templates/components/modals/add_vehicle_modal.html",
 			"internal/templates/components/modals/add_log_entry_modal.html",
@@ -61,34 +61,19 @@ func main() {
 		),
 	}
 
-	vehiclePersistence := persistence.NewInMemoryVehiclePersistence()
-	listVehiclesUseCase := vehicleusecases.NewListVehiclesUseCase(vehiclePersistence)
-	createVehicleUseCase := vehicleusecases.NewCreateVehicleUseCase(vehiclePersistence)
-	addLogEntryUseCase := vehicleusecases.NewAddLogEntryUseCase(vehiclePersistence)
-	editLogEntryUseCase := vehicleusecases.NewEditLogEntryUseCase(vehiclePersistence)
-	editVehicleUseCase := vehicleusecases.NewEditVehicleUseCase(vehiclePersistence)
-	deleteVehicleUseCase := vehicleusecases.NewDeleteVehicleUseCase(vehiclePersistence)
-	deleteLogEntryUseCase := vehicleusecases.NewDeleteLogEntryUseCase(vehiclePersistence)
-	homeHandler := controllers.NewHomeHandler(
-		listVehiclesUseCase,
-		createVehicleUseCase,
-		addLogEntryUseCase,
-		editLogEntryUseCase,
-		editVehicleUseCase,
-		deleteVehicleUseCase,
-		deleteLogEntryUseCase,
-		templates["home"],
-	)
+	vehicleService := vehicles.NewService(persistence.NewInMemoryVehiclePersistence())
+	engine := ui.NewEngine(templates["home"])
+	handler := http.NewVehicleHandler(vehicleService, engine)
 
-	mux := http.NewServeMux()
-	mux.Handle("GET /static/", http.FileServer(http.FS(staticFiles)))
-	mux.HandleFunc("GET /", homeHandler.Home)
-	mux.HandleFunc("POST /vehicles", homeHandler.CreateVehicle)
-	mux.HandleFunc("POST /vehicles/{id}/log-entries", homeHandler.AddLogEntry)
-	mux.HandleFunc("PUT /vehicles/{vehicleId}/log-entries/{logEntryId}", homeHandler.EditLogEntry)
-	mux.HandleFunc("PUT /vehicles/{id}", homeHandler.EditVehicle)
-	mux.HandleFunc("DELETE /vehicles/{id}", homeHandler.DeleteVehicle)
-	mux.HandleFunc("DELETE /vehicles/{vehicleId}/log-entries/{logEntryId}", homeHandler.DeleteLogEntry)
+	mux := nethttp.NewServeMux()
+	mux.Handle("GET /static/", nethttp.FileServer(nethttp.FS(staticFiles)))
+	mux.HandleFunc("GET /", handler.Home)
+	mux.HandleFunc("POST /vehicles", handler.CreateVehicle)
+	mux.HandleFunc("POST /vehicles/{id}/log-entries", handler.AddLogEntry)
+	mux.HandleFunc("PUT /vehicles/{vehicleId}/log-entries/{logEntryId}", handler.EditLogEntry)
+	mux.HandleFunc("PUT /vehicles/{id}", handler.EditVehicle)
+	mux.HandleFunc("DELETE /vehicles/{id}", handler.DeleteVehicle)
+	mux.HandleFunc("DELETE /vehicles/{vehicleId}/log-entries/{logEntryId}", handler.DeleteLogEntry)
 
-	log.Fatal(http.ListenAndServe(":8080", mux))
+	log.Fatal(nethttp.ListenAndServe(":8080", mux))
 }
