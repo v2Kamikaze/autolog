@@ -1,0 +1,71 @@
+{{ define "log_list_item" }}
+
+{{ $entry := . }}
+
+<div
+  id="log-entries-list-item-{{ $entry.ID }}"
+  class="grid grid-cols-[2fr_1fr_1fr_1fr_auto] items-center gap-[18px] border-2 border-neutral-300 bg-neutral-50 p-[18px] transition hover:translate-x-1 hover:border-neutral-900 max-[1100px]:grid-cols-1 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-100"
+>
+  <div class="flex flex-col gap-1">
+    <div class="text-[15px] font-bold text-neutral-900 dark:text-neutral-100">{{ $entry.Name }}</div>
+    <div class="text-xs tracking-widest text-neutral-500 uppercase">{{ $entry.Type.Label }}</div>
+  </div>
+
+  <div>
+    <div class="mb-1 text-[10px] tracking-widest text-neutral-500 uppercase">Data</div>
+    <div class="text-sm font-bold text-neutral-900 dark:text-neutral-100">{{ FmtDate $entry.Date }}</div>
+  </div>
+
+  <div>
+    <div class="mb-1 text-[10px] tracking-widest text-neutral-500 uppercase">KM</div>
+    <div class="text-sm font-bold text-neutral-900 dark:text-neutral-100">{{ $entry.KM }}</div>
+  </div>
+
+  <div>
+    <div class="mb-1 text-[10px] tracking-widest text-neutral-500 uppercase">Valor</div>
+    <div class="text-sm font-bold text-neutral-900 dark:text-neutral-100">{{ FmtCurrency $entry.Cost }}</div>
+  </div>
+
+  <div class="flex gap-2">
+    <button
+      type="button"
+      title="Editar log"
+      class="flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-900 bg-neutral-50 text-neutral-900 transition hover:-translate-y-0.5 hover:bg-neutral-900 hover:text-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-950"
+      x-on:click="$dispatch('open-modal', {
+          modalId: 'edit-log-entry',
+          data: {
+              id: {{ $entry.ID }},
+              vehicleId: {{ $entry.VehicleID }},
+              name: '{{ $entry.Name }}',
+              entryType: '{{ $entry.Type }}',
+              date: '{{ ToDate $entry.Date }}',
+              km: {{ $entry.KM }},
+              cost: {{ $entry.Cost }}
+          }
+      })"
+    >
+      {{ template "icon_edit" "w-4 h-4" }}
+    </button>
+
+    <button
+      type="button"
+      title="Excluir log"
+      class="flex size-11 cursor-pointer items-center justify-center border-2 border-orange-500 bg-orange-500 text-neutral-100 transition hover:-translate-y-0.5 hover:border-neutral-900 hover:bg-neutral-900 hover:text-neutral-50 dark:hover:border-white dark:hover:bg-white dark:hover:text-neutral-950"
+      x-on:click="$dispatch('open-modal', {
+          modalId: 'delete-log-entry',
+          data: {
+              vehicleId: {{ $entry.VehicleID }},
+              logEntryId: {{ $entry.ID }},
+              name: '{{ $entry.Name }}',
+              date: '{{ FmtDate $entry.Date }}',
+              km: {{ $entry.KM }},
+              cost: {{ $entry.Cost }}
+          }
+      })"
+    >
+      {{ template "icon_x" "w-4 h-4" }}
+    </button>
+  </div>
+</div>
+
+{{ end }}

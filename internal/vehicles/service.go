@@ -27,7 +27,8 @@ func (s *Service) Create(ctx context.Context, input CreateVehicleInput) (*entiti
 		LogEntries: []*entities.LogEntry{},
 	}
 
-	if err := s.repo.CreateVehicle(ctx, vehicle); err != nil {
+	vehicle, err := s.repo.CreateVehicle(ctx, vehicle)
+	if err != nil {
 		return nil, err
 	}
 

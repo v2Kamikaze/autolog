@@ -8,7 +8,7 @@ import (
 
 	"github.com/v2code/autolog/internal/functions"
 	"github.com/v2code/autolog/internal/http"
-	"github.com/v2code/autolog/internal/persistence"
+	"github.com/v2code/autolog/internal/persistence/mocks"
 	"github.com/v2code/autolog/internal/ui"
 	"github.com/v2code/autolog/internal/vehicles"
 )
@@ -25,12 +25,24 @@ func main() {
 
 			"internal/templates/components/ui/icons.html",
 			"internal/templates/components/ui/logo.html",
+			"internal/templates/components/layout/navigation_bar.html",
 			"internal/templates/components/modals/add_vehicle_modal.html",
 			"internal/templates/components/modals/add_log_entry_modal.html",
 			"internal/templates/components/modals/edit_vehicle_modal.html",
 			"internal/templates/components/modals/edit_log_entry_modal.html",
 			"internal/templates/components/modals/delete_vehicle_modal.html",
 			"internal/templates/components/modals/delete_log_entry_modal.html",
+			"internal/templates/components/lists/vehicles_list.html",
+			"internal/templates/components/lists/vehicles_list_item.html",
+			"internal/templates/components/lists/log_list.html",
+			"internal/templates/components/lists/log_list_item.html",
+			"internal/templates/components/lists/log_entry_count_text.html",
+			"internal/templates/components/streams/add_vehicle_stream.html",
+			"internal/templates/components/streams/edit_vehicle_stream.html",
+			"internal/templates/components/streams/delete_vehicle_stream.html",
+			"internal/templates/components/streams/add_log_stream.html",
+			"internal/templates/components/streams/edit_log_stream.html",
+			"internal/templates/components/streams/delete_log_stream.html",
 		}
 
 		files = append(files, components...)
@@ -38,31 +50,13 @@ func main() {
 		return template.Must(template.New("base_page.html").Funcs(functions.FuncMap).ParseFS(templateFiles, files...))
 	}
 
-	templates := map[string]*template.Template{
-		"home": load(
-			"internal/templates/pages/base_page.html",
-			"internal/templates/pages/home_page.html",
-			"internal/templates/partials/navigation_bar.html",
-			"internal/templates/partials/vehicle_list.html",
-			"internal/templates/partials/vehicle_log_entry_count_text.html",
-			"internal/templates/partials/vehicle_list_item.html",
-			"internal/templates/partials/log_entry_list.html",
-			"internal/templates/partials/log_entry_list_item.html",
-			"internal/templates/responses/add_vehicle_list_item_response.html",
-			"internal/templates/responses/edit_vehicle_list_item_response.html",
-			"internal/templates/responses/add_log_entry_list_item_response.html",
-			"internal/templates/responses/edit_log_entry_list_item_response.html",
-			"internal/templates/responses/delete_vehicle_list_item_response.html",
-			"internal/templates/responses/delete_log_entry_list_item_response.html",
-		),
-		"vehicles": load(
-			"internal/templates/pages/base_page.html",
-			"internal/templates/pages/vehicles_page.html",
-		),
-	}
+	homeTemplate := load(
+		"internal/templates/components/layout/base_page.html",
+		"internal/templates/pages/home_page.html",
+	)
 
-	vehicleService := vehicles.NewService(persistence.NewInMemoryVehiclePersistence())
-	engine := ui.NewEngine(templates["home"])
+	vehicleService := vehicles.NewService(mocks.NewVehiclePersistenceMock())
+	engine := ui.NewEngine(homeTemplate)
 	handler := http.NewVehicleHandler(vehicleService, engine)
 
 	mux := nethttp.NewServeMux()

@@ -1,0 +1,80 @@
+{{ define "vehicles_list_item" }}
+
+{{ $vehicle := . }}
+{{ $logEntryCount := $vehicle.LogEntryCount }}
+
+<div
+  id="vehicles-list-item-{{ $vehicle.ID }}"
+  x-data="{ open: false }"
+  class="relative isolate overflow-hidden border-[3px] border-neutral-900 bg-neutral-50 shadow-[8px_8px_0_0_#000] transition-transform duration-250 hover:-translate-y-1 dark:border-neutral-100 dark:bg-neutral-900"
+>
+  <div
+    class="relative flex min-h-[220px] items-center justify-between gap-6 px-9 py-9 max-[1000px]:flex-col max-[1000px]:items-start max-[1000px]:gap-10 before:absolute before:inset-y-0 before:right-40 before:-z-10 before:w-1.5 before:bg-neutral-900 after:absolute after:inset-y-0 after:right-[9.25rem] after:-z-10 after:w-0.5 after:bg-orange-500 max-[1000px]:before:hidden max-[1000px]:after:hidden dark:before:bg-neutral-100"
+  >
+    <div class="relative z-10 min-w-0 flex-1 pr-4 max-[1000px]:w-full max-[1000px]:pr-0">
+      <span class="mb-[18px] inline-block border-2 border-neutral-900 bg-neutral-900 px-3.5 py-2 text-xs font-extrabold tracking-widest text-neutral-50 uppercase dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-950">
+        {{ if $vehicle.Type }}{{ $vehicle.Type }}{{ else }}—{{ end }}
+      </span>
+
+      <h2 class="text-7xl leading-[0.85] font-extrabold tracking-tighter text-neutral-900 lowercase break-words -skew-x-6 max-[700px]:text-4xl dark:text-neutral-100">
+        {{ $vehicle.Title }}
+      </h2>
+
+      <p id="vehicle-log-entry-count-{{ $vehicle.ID }}" class="mt-2.5 text-xl font-bold tracking-widest text-neutral-600 uppercase dark:text-neutral-400">
+        {{ template "log_entry_count_text" $logEntryCount }}
+      </p>
+
+      <div class="mt-6 inline-flex items-center gap-3 border-2 border-neutral-900 bg-white px-[18px] py-3.5 text-sm font-extrabold tracking-wide text-neutral-900 shadow-[4px_4px_0_0_#000] dark:border-neutral-100 dark:bg-neutral-950 dark:text-neutral-100">
+        {{ template "icon_gauge" "w-4 h-4 shrink-0" }}
+        <span>{{ $vehicle.KM }} km</span>
+      </div>
+    </div>
+
+    <div class="absolute top-9 right-9 z-20 flex items-center gap-3 max-[1000px]:static max-[1000px]:self-end">
+      <button
+        type="button"
+        title="Adicionar novo log"
+        class="flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-900 bg-neutral-50 text-neutral-900 transition hover:-translate-y-0.5 hover:bg-neutral-900 hover:text-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-950"
+        x-on:click.stop="$dispatch('open-modal', { modalId: 'add-log-entry', data: { vehicleId: {{ $vehicle.ID }} } })"
+      >
+        {{ template "icon_plus" "w-4 h-4" }}
+      </button>
+
+      <button
+        type="button"
+        title="Editar veículo"
+        class="flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-900 bg-neutral-50 text-neutral-900 transition hover:-translate-y-0.5 hover:bg-neutral-900 hover:text-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-950"
+        x-on:click.stop="$dispatch('open-modal', { modalId: 'edit-vehicle', data: { vehicleId: {{ $vehicle.ID }}, title: '{{ $vehicle.Title }}', vehicleType: '{{ $vehicle.Type }}', km: {{ $vehicle.KM }} } })"
+      >
+        {{ template "icon_edit" "w-4 h-4" }}
+      </button>
+
+      <button
+        type="button"
+        title="Excluir veículo"
+        class="flex size-11 cursor-pointer items-center justify-center border-2 border-orange-500 bg-orange-500 text-neutral-100 transition hover:-translate-y-0.5 hover:border-neutral-900 hover:bg-neutral-900 hover:text-neutral-50 dark:hover:border-white dark:hover:bg-white dark:hover:text-neutral-950"
+        x-on:click.stop="$dispatch('open-modal', { modalId: 'delete-vehicle', data: { vehicleId: {{ $vehicle.ID }}, title: '{{ $vehicle.Title }}', km: {{ $vehicle.KM }} } })"
+      >
+        {{ template "icon_x" "w-4 h-4" }}
+      </button>
+
+      <button
+        type="button"
+        title="Expandir histórico"
+        class="flex size-[52px] cursor-pointer items-center justify-center border-2 border-neutral-900 bg-neutral-50 text-neutral-900 transition hover:-translate-y-0.5 hover:bg-neutral-900 hover:text-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-950"
+        x-on:click.stop="open = !open"
+        :aria-expanded="open"
+      >
+        <span class="inline-flex transition-transform duration-250" :class="open ? 'rotate-180' : ''">
+          {{ template "icon_chevron_down" "w-5 h-5" }}
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div x-show="open" x-cloak x-transition class="border-t-[3px] border-neutral-900 bg-white px-9 py-7 dark:border-neutral-100 dark:bg-neutral-950">
+    {{ template "log_list" $vehicle }}
+  </div>
+</div>
+
+{{ end }}

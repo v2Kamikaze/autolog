@@ -43,9 +43,10 @@
             x-bind:action="`/vehicles/${data.vehicleId}/log-entries/${data.id}`"
             x-effect="
                 if (!isOpen) return;
-                cents = data.cost ?? 0;
+                const cost = data.cost ?? 0;
+                cents = cost;
                 if ($refs.costInput) {
-                    $refs.costInput.value = formatCents(cents);
+                    $refs.costInput.value = formatCents(cost);
                 }
             "
             x-on:turbo:submit-start="loading = true"

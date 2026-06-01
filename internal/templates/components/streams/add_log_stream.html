@@ -1,0 +1,19 @@
+{{ define "add_log_stream" }}
+<turbo-stream action="append" target="log-entries-list-{{ .LogEntry.VehicleID }}">
+  <template>
+    {{ template "log_list_item" .LogEntry }}
+  </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="total-cost-{{ .LogEntry.VehicleID }}">
+  <template>
+    total: {{ FmtCurrency .TotalCost }}
+  </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="vehicle-log-entry-count-{{ .LogEntry.VehicleID }}">
+  <template>
+    {{ template "log_entry_count_text" .LogEntryCount }}
+  </template>
+</turbo-stream>
+{{ end }}

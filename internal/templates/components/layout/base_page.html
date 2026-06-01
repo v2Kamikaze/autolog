@@ -19,16 +19,10 @@
       })();
     </script>
 
-    <!-- Tailwind -->
     <link rel="stylesheet" href="/static/css/output.css" />
-
-    <!-- Alpine -->
     <script defer src="/static/js/alpinejs@3.15.12.min.js"></script>
-
-    <!-- Turbo -->
     <script src="/static/js/turbo.es2017-umd.js"></script>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 
@@ -55,13 +49,12 @@
     <div class="pointer-events-none fixed right-5 bottom-5 z-0 select-none text-[240px] leading-none font-extrabold text-neutral-900/[0.03] dark:text-white/[0.03]" aria-hidden="true">車</div>
 
     <div class="mx-auto max-w-7xl px-6 py-10">
-        {{ block "content" . }}
-        {{ end }}
+      {{ block "content" . }}
+      {{ end }}
     </div>
 
     {{ block "modals" . }}
     {{ end }}
-
- </body>
+  </body>
 </html>
 {{ end }}

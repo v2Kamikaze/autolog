@@ -52,7 +52,9 @@ document.addEventListener('alpine:init', () => {
 
 {{ template "navigation_bar" }}
 
-{{ template "vehicle_list" $vehicles }}
+<main>
+{{ template "vehicles_list" $vehicles }}
+</main>
 
 {{ end }}
 

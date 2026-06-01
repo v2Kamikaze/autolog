@@ -16,7 +16,7 @@ func Home(vehicles []*entities.Vehicle) ui.Renderer {
 
 func VehicleCreated(vehicle *entities.Vehicle) ui.Renderer {
 	return ui.View{
-		TemplateName: "add_vehicle_list_item_response",
+		TemplateName: "add_vehicle_stream",
 		Data: ui.Data{
 			"Vehicle": vehicle,
 		},
@@ -25,7 +25,7 @@ func VehicleCreated(vehicle *entities.Vehicle) ui.Renderer {
 
 func VehicleUpdated(vehicle *entities.Vehicle) ui.Renderer {
 	return ui.View{
-		TemplateName: "edit_vehicle_list_item_response",
+		TemplateName: "edit_vehicle_stream",
 		Data: ui.Data{
 			"Vehicle": vehicle,
 		},
@@ -34,7 +34,7 @@ func VehicleUpdated(vehicle *entities.Vehicle) ui.Renderer {
 
 func VehicleDeleted(vehicle *entities.Vehicle) ui.Renderer {
 	return ui.View{
-		TemplateName: "delete_vehicle_list_item_response",
+		TemplateName: "delete_vehicle_stream",
 		Data: ui.Data{
 			"Vehicle": vehicle,
 		},
@@ -43,7 +43,7 @@ func VehicleDeleted(vehicle *entities.Vehicle) ui.Renderer {
 
 func LogEntryAdded(vehicle *entities.Vehicle, entry *entities.LogEntry) ui.Renderer {
 	return ui.View{
-		TemplateName: "add_log_entry_list_item_response",
+		TemplateName: "add_log_stream",
 		Data: ui.Data{
 			"LogEntry":      entry,
 			"TotalCost":     vehicle.TotalCost(),
@@ -54,7 +54,7 @@ func LogEntryAdded(vehicle *entities.Vehicle, entry *entities.LogEntry) ui.Rende
 
 func LogEntryUpdated(vehicle *entities.Vehicle, entry *entities.LogEntry) ui.Renderer {
 	return ui.View{
-		TemplateName: "edit_log_entry_list_item_response",
+		TemplateName: "edit_log_stream",
 		Data: ui.Data{
 			"LogEntry":  entry,
 			"TotalCost": vehicle.TotalCost(),
@@ -64,7 +64,7 @@ func LogEntryUpdated(vehicle *entities.Vehicle, entry *entities.LogEntry) ui.Ren
 
 func LogEntryDeleted(vehicle *entities.Vehicle, entry *entities.LogEntry) ui.Renderer {
 	return ui.View{
-		TemplateName: "delete_log_entry_list_item_response",
+		TemplateName: "delete_log_stream",
 		Data: ui.Data{
 			"LogEntry":      entry,
 			"TotalCost":     vehicle.TotalCost(),
