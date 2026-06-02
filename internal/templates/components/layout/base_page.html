@@ -23,8 +23,8 @@
     <script defer src="/static/js/alpinejs@3.15.12.min.js"></script>
     <script src="/static/js/turbo.es2017-umd.js"></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
 
     <style>
       [x-cloak] {
@@ -37,18 +37,14 @@
 
   <body
     class="
-      min-h-screen overflow-x-hidden
-      font-sans text-neutral-900
-      bg-linear-to-b from-neutral-100 to-neutral-200
-      before:fixed before:inset-0 before:bg-[radial-gradient(rgba(0,0,0,0.12)_1px,transparent_1px)] before:bg-size-[6px_6px] before:opacity-[0.04] before:pointer-events-none before:content-['']
-      dark:text-neutral-100 dark:from-neutral-900 dark:to-neutral-950
-      dark:before:bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] dark:before:opacity-[0.03]
+      min-h-screen overflow-x-hidden p-6 md:p-12
+      font-['Libre_Baskerville',serif] text-neutral-900
+      bg-linear-to-br from-amber-800 to-stone-900
+      before:fixed before:inset-0 before:bg-[repeating-linear-gradient(90deg,rgba(0,0,0,0.05)_0px,rgba(0,0,0,0.05)_2px,transparent_2px,transparent_14px)] before:pointer-events-none before:content-['']
+      dark:text-amber-50 dark:from-stone-900 dark:to-stone-950 dark:before:bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.015)_0px,rgba(255,255,255,0.015)_2px,transparent_2px,transparent_12px)]
     "
   >
-    <div class="pointer-events-none fixed top-10 -left-5 z-0 select-none text-[240px] leading-none font-extrabold text-neutral-900/[0.03] dark:text-white/[0.03]" aria-hidden="true">速</div>
-    <div class="pointer-events-none fixed right-5 bottom-5 z-0 select-none text-[240px] leading-none font-extrabold text-neutral-900/[0.03] dark:text-white/[0.03]" aria-hidden="true">車</div>
-
-    <div class="mx-auto max-w-7xl px-6 py-10">
+    <div class="mx-auto max-w-[1400px]">
       {{ block "content" . }}
       {{ end }}
     </div>

@@ -4,33 +4,21 @@
 
 <div
   id="log-entries-list-item-{{ $entry.ID }}"
-  class="grid grid-cols-[2fr_1fr_1fr_1fr_auto] items-center gap-[18px] border-2 border-neutral-300 bg-neutral-50 p-[18px] transition hover:translate-x-1 hover:border-neutral-900 max-[1100px]:grid-cols-1 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-100"
+  class="border-b border-dashed border-neutral-400 pb-3.5 dark:border-white/15"
 >
-  <div class="flex flex-col gap-1">
-    <div class="text-[15px] font-bold text-neutral-900 dark:text-neutral-100">{{ $entry.Name }}</div>
-    <div class="text-xs tracking-widest text-neutral-500 uppercase">{{ $entry.Type.Label }}</div>
+  <div class="text-sm font-bold uppercase text-neutral-900 dark:text-amber-50">{{ $entry.Name }}</div>
+  <div class="mt-1 text-xs tracking-widest text-neutral-500 uppercase dark:text-stone-400">{{ $entry.Type.Label }}</div>
+  <div class="mt-1.5 text-xs text-neutral-500 uppercase dark:text-stone-400">
+    {{ FmtDate $entry.Date }} • {{ $entry.KM }} KM
   </div>
-
-  <div>
-    <div class="mb-1 text-[10px] tracking-widest text-neutral-500 uppercase">Data</div>
-    <div class="text-sm font-bold text-neutral-900 dark:text-neutral-100">{{ FmtDate $entry.Date }}</div>
+  <div class="mt-2 font-['Playfair_Display',serif] text-2xl leading-none font-bold text-neutral-900 dark:text-amber-50">
+    {{ FmtCurrency $entry.Cost }}
   </div>
-
-  <div>
-    <div class="mb-1 text-[10px] tracking-widest text-neutral-500 uppercase">KM</div>
-    <div class="text-sm font-bold text-neutral-900 dark:text-neutral-100">{{ $entry.KM }}</div>
-  </div>
-
-  <div>
-    <div class="mb-1 text-[10px] tracking-widest text-neutral-500 uppercase">Valor</div>
-    <div class="text-sm font-bold text-neutral-900 dark:text-neutral-100">{{ FmtCurrency $entry.Cost }}</div>
-  </div>
-
-  <div class="flex gap-2">
+  <div class="mt-3 flex gap-2">
     <button
       type="button"
       title="Editar log"
-      class="flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-900 bg-neutral-50 text-neutral-900 transition hover:-translate-y-0.5 hover:bg-neutral-900 hover:text-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-950"
+      class="flex size-9 cursor-pointer items-center justify-center border border-neutral-900/70 bg-amber-50 text-neutral-900 transition hover:-translate-y-0.5 dark:border-neutral-100/50 dark:bg-neutral-950 dark:text-neutral-100"
       x-on:click="$dispatch('open-modal', {
           modalId: 'edit-log-entry',
           data: {
@@ -50,7 +38,7 @@
     <button
       type="button"
       title="Excluir log"
-      class="flex size-11 cursor-pointer items-center justify-center border-2 border-orange-500 bg-orange-500 text-neutral-100 transition hover:-translate-y-0.5 hover:border-neutral-900 hover:bg-neutral-900 hover:text-neutral-50 dark:hover:border-white dark:hover:bg-white dark:hover:text-neutral-950"
+      class="flex size-9 cursor-pointer items-center justify-center border border-red-700/70 bg-red-700 text-neutral-100 transition hover:-translate-y-0.5 dark:border-red-400/50 dark:bg-red-500/80"
       x-on:click="$dispatch('open-modal', {
           modalId: 'delete-log-entry',
           data: {

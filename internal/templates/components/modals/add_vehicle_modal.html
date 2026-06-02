@@ -13,18 +13,20 @@
     ></div>
 
     <div
-        class="relative z-10 w-full max-w-lg border-[3px] border-neutral-900 bg-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 p-8 shadow-[8px_8px_0_0_#000] sm:max-w-xl"
+        class="relative z-10 w-full max-w-lg overflow-hidden border border-black/40 bg-amber-50 p-8 shadow-2xl sm:max-w-xl dark:border-stone-600 dark:bg-linear-to-b dark:from-stone-900 dark:to-stone-950"
         x-on:click.stop
     >
+        <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.04)_1px,transparent_1px)] bg-size-[3px_3px] opacity-35 dark:bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] dark:opacity-55"></div>
+        <div class="pointer-events-none absolute top-0 right-0 h-14 w-14 bg-[linear-gradient(-45deg,transparent_49%,rgba(0,0,0,0.08)_50%)] dark:bg-[linear-gradient(-45deg,transparent_49%,rgba(255,255,255,0.08)_50%)]"></div>
         <button
             type="button"
             x-on:click="close()"
-            class="absolute top-6 right-6 flex size-11 cursor-pointer items-center justify-center border-2 border-neutral-900 bg-neutral-50 text-neutral-900 transition hover:-translate-y-0.5 hover:bg-neutral-900 hover:text-neutral-50 dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-950"
+            class="absolute top-6 right-6 z-10 flex size-11 cursor-pointer items-center justify-center border border-neutral-900/70 bg-amber-50 text-neutral-900 transition hover:-translate-y-0.5 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50"
         >
             {{ template "icon_x" "w-4 h-4" }}
         </button>
 
-        <h2 class="mb-6 pr-12 text-sm font-extrabold tracking-widest text-neutral-900 uppercase dark:text-neutral-100">Novo veículo</h2>
+        <h2 class="relative mb-6 pr-12 font-['Playfair_Display',serif] text-3xl leading-none font-black uppercase text-neutral-900 dark:text-amber-50">Novo veículo</h2>
 
         <form
             id="add-vehicle-form"
@@ -45,7 +47,7 @@
                 <input
                     name="title"
                     required
-                    class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:border-neutral-100 focus:outline-none"
+                    class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none"
                 >
             </div>
 
@@ -55,7 +57,7 @@
                     name="vehicle_type"
                     required
                     placeholder="sedan, hatch, suv..."
-                    class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-600 focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:border-neutral-100 focus:outline-none"
+                    class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-600 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none"
                 >
             </div>
 
@@ -65,7 +67,7 @@
                     type="number"
                     name="km"
                     required
-                    class="w-full border-2 border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:border-neutral-100 focus:outline-none"
+                    class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none"
                 >
             </div>
 
@@ -73,14 +75,14 @@
                 <button
                     type="button"
                     x-on:click="close()"
-                    class="cursor-pointer border-2 border-neutral-900 bg-neutral-50 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-900 uppercase dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
+                    class="cursor-pointer border border-neutral-900/70 bg-amber-50 px-5 py-3 text-sm font-bold tracking-wide text-neutral-900 uppercase shadow-lg transition duration-250 hover:-translate-y-1 hover:rotate-1 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50"
                 >
                     Cancelar
                 </button>
                 <button
                     type="submit"
                     x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }"
-                    class="flex cursor-pointer items-center gap-2 border-2 border-neutral-900 bg-neutral-50 px-5.5 py-3.5 text-sm font-bold tracking-wide text-neutral-900 uppercase dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 shadow-[5px_5px_0_0_#000] transition-transform hover:-translate-y-1 hover:-rotate-3"
+                    class="flex cursor-pointer items-center gap-2 border border-neutral-900/70 bg-amber-50 px-5 py-3 text-sm font-bold tracking-wide text-neutral-900 uppercase shadow-lg transition duration-250 hover:-translate-y-1 hover:-rotate-1 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50"
                 >
                     <span x-show="loading" class="inline-flex shrink-0">
                         {{ template "icon_loader" "w-4 h-4 animate-spin" }}
