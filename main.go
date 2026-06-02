@@ -69,5 +69,5 @@ func main() {
 	mux.HandleFunc("DELETE /vehicles/{id}", handler.DeleteVehicle)
 	mux.HandleFunc("DELETE /vehicles/{vehicleId}/log-entries/{logEntryId}", handler.DeleteLogEntry)
 
-	log.Fatal(nethttp.ListenAndServe(":8080", mux))
+	log.Fatal(nethttp.ListenAndServe("0.0.0.0:8080", mux))
 }
