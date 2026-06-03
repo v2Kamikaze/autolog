@@ -2,13 +2,15 @@
 
 {{ $vehicles := . }}
 
-<div id="vehicles-list" class="mx-auto grid w-full max-w-350 grid-cols-1 gap-11 lg:grid-cols-2 items-start">
+<div id="vehicles-list" class="mx-auto grid w-full max-w-350 grid-cols-1 gap-11 lg:grid-cols-2 items-start animate-[slide-up-fade-in_.7s_ease_1.35s_both]">
   {{ if $vehicles}}
     {{ range $vehicles }}
       {{ template "vehicles_list_item" . }}
     {{ end }}
   {{ else }}
-    <p class="rounded-sm bg-amber-50/90 p-6 text-center text-sm text-neutral-600 shadow-lg lg:col-span-2">Ainda não possui nenhum veículo registrado.</p>
+    <p class="rounded-sm bg-amber-50/90 p-6 text-center text-sm text-neutral-600 shadow-lg lg:col-span-2">
+      Ainda não possui nenhum veículo registrado.
+    </p>
   {{ end }}
 </div>
 
