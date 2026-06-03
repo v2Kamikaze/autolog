@@ -2,7 +2,7 @@
 
 {{ $vehicles := . }}
 
-<div id="vehicles-list" class="mx-auto grid w-full max-w-350 grid-cols-1 gap-11 lg:grid-cols-2">
+<div id="vehicles-list" class="mx-auto grid w-full max-w-350 grid-cols-1 gap-11 lg:grid-cols-2 items-start">
   {{ if $vehicles}}
     {{ range $vehicles }}
       {{ template "vehicles_list_item" . }}

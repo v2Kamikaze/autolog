@@ -1,37 +1,107 @@
 {{ define "navigation_bar" }}
 
 <section class="relative mb-12">
+
   <div class="mb-8">
-    {{ template "logo" }}
+
+    <div class="text-center text-amber-50">
+
+      <div class="mx-auto w-64 sm:w-80">
+        <div class="w-0 border-t-[3px] border-double border-amber-50/60 animate-[open-rule_.9s_ease_forwards]"></div>
+      </div>
+
+      <div class="mx-auto mb-6 w-64 sm:w-80">
+        <div class="w-0 animate-logo-rule border-t-[3px] border-double border-amber-50/60"></div>
+      </div>
+
+      <h1 aria-label="Autolog logo" class="font-display text-5xl leading-none font-black tracking-[-0.04em] uppercase sm:text-7xl md:text-8xl">
+        <span class="inline-block opacity-0 blur-sm transform-[translateY(-25px)] animate-[letter-appear_.5s_.40s_forwards]">
+          A
+        </span>
+
+        <span class="inline-block opacity-0 blur-sm transform-[translateY(-25px)] animate-[letter-appear_.5s_.48s_forwards]">
+          u
+        </span>
+
+        <span class="inline-block opacity-0 blur-sm transform-[translateY(-25px)] animate-[letter-appear_.5s_.56s_forwards]">
+          t
+        </span>
+
+        <span class="inline-block opacity-0 blur-sm transform-[translateY(-25px)] animate-[letter-appear_.5s_.64s_forwards]">
+          o
+        </span>
+
+        <span class="inline-block opacity-0 blur-sm transform-[translateY(-25px)] animate-[letter-appear_.5s_.72s_forwards]">
+          l
+        </span>
+
+        <span class="inline-block opacity-0 blur-sm transform-[translateY(-25px)] animate-[letter-appear_.5s_.80s_forwards]">
+          o
+        </span>
+
+        <span class="inline-block opacity-0 blur-sm transform-[translateY(-25px)] animate-[letter-appear_.5s_.88s_forwards]">
+          g
+        </span>
+
+      </h1>
+
+      <div class="mt-3 text-xs tracking-[0.35em] uppercase opacity-0 sm:text-xs animate-[subtitle-appear_.8s_1.15s_forwards]">
+        Registros de despesas veiculares
+      </div>
+
+
+      <div class="mx-auto mt-5 w-64 sm:w-80">
+
+        <div class="w-0 animate-[open-rule_.9s_ease_1.25s_forwards] border-t-[3px] border-double border-amber-50/60"></div>
+
+      </div>
+
+    </div>
+
   </div>
 
-  <nav class="flex justify-center">
-    <ul class="flex flex-wrap items-center justify-center gap-3.5">
+  <nav class="flex justify-center opacity-0 animate-[paper-drop_.7s_ease_1.45s_forwards]">
+    <ul class="flex items-center justify-center gap-3.5">
       <li>
+
         <button
           type="button"
           x-data="theme_switch"
           x-on:click="toggle()"
           x-bind:title="dark ? 'Ativar tema claro' : 'Ativar tema escuro'"
           x-bind:aria-label="dark ? 'Ativar tema claro' : 'Ativar tema escuro'"
-          class="flex size-[52px] cursor-pointer items-center justify-center border border-neutral-900/70 bg-amber-50 text-neutral-900 shadow-lg transition duration-250 hover:-translate-y-1 hover:rotate-1 dark:border-neutral-200/30 dark:bg-neutral-900 dark:text-neutral-100"
+          class="flex size-12 cursor-pointer items-center justify-center border border-neutral-900/70 bg-amber-50 text-neutral-900 shadow-lg transition duration-250 hover:-translate-y-1 dark:border-neutral-200/30 dark:bg-neutral-900 dark:text-neutral-100"
         >
-          <span x-show="dark" x-cloak>{{ template "icon_sun" "w-5 h-5" }}</span>
-          <span x-show="!dark" x-cloak>{{ template "icon_moon" "w-5 h-5" }}</span>
+
+          <span x-show="dark" x-cloak>
+            {{ template "icon_sun" "w-5 h-5" }}
+          </span>
+
+          <span x-show="!dark" x-cloak>
+            {{ template "icon_moon" "w-5 h-5" }}
+          </span>
+
         </button>
+
       </li>
+
       <li>
+
         <button
           type="button"
           x-data
           x-on:click="$dispatch('open-modal', { modalId: 'add-vehicle', data: {} })"
-          class="cursor-pointer border border-neutral-900/70 bg-amber-50 px-5 py-3 text-sm font-bold tracking-wide text-neutral-900 uppercase shadow-lg transition duration-250 hover:-translate-y-1 hover:-rotate-1 dark:border-neutral-200/30 dark:bg-neutral-900 dark:text-neutral-100"
+          class="h-12 cursor-pointer border border-neutral-900/70 bg-amber-50 px-5 py-3 text-sm font-bold tracking-wide text-neutral-900 uppercase shadow-lg transition duration-250 hover:-translate-y-1 dark:border-neutral-200/30 dark:bg-neutral-900 dark:text-neutral-100"
         >
           Cadastrar novo veículo
         </button>
+
       </li>
+
     </ul>
+
   </nav>
+
 </section>
 
 {{ end }}

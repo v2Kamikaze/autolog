@@ -24,7 +24,6 @@ func main() {
 		components := []string{
 
 			"internal/templates/components/ui/icons.html",
-			"internal/templates/components/ui/logo.html",
 			"internal/templates/components/layout/navigation_bar.html",
 			"internal/templates/components/modals/add_vehicle_modal.html",
 			"internal/templates/components/modals/add_log_entry_modal.html",
