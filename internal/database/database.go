@@ -1,8 +1,9 @@
-package persistence
+package database
 
 import (
 	"context"
 	"database/sql"
+	"log"
 )
 
 type Database interface {
@@ -20,8 +21,8 @@ type databaseTransactionKeyType struct{}
 
 var databaseTransactionKey = databaseTransactionKeyType{}
 
-func NewDatabase(db *sql.DB) Database {
-	return &database{db: db}
+func NewDatabase(conn *sql.DB) Database {
+	return &database{db: conn}
 }
 
 func (db *database) Executor(ctx context.Context) QueryExecutor {
@@ -39,7 +40,11 @@ func (db *database) WithTransaction(ctx context.Context, fn TransactionFunc) err
 
 	ctx = context.WithValue(ctx, databaseTransactionKey, tx)
 
-	defer tx.Rollback()
+	defer func() {
+		if err := tx.Rollback(); err != nil {
+			log.Fatalf("transaction rollback failed: %v", err)
+		}
+	}()
 
 	if err := fn(ctx); err != nil {
 		return err

@@ -1,5 +1,9 @@
 {{ define "log_entry_count_text" }}
-  {{- $count := . -}}
+
+{{ $vehicle := . }}
+
+<span id="vehicle-log-entry-count-{{ $vehicle.ID }}" class="text-sm font-bold dark:text-amber-100">
+  {{- $count := $vehicle.LogEntryCount -}}
   {{- if le $count 0 -}}
     nenhum log registrado
   {{- else if eq $count 1 -}}
@@ -7,4 +11,6 @@
   {{- else -}}
     {{ $count }} logs registrados
   {{- end -}}
+</span>
+
 {{ end }}

@@ -2,32 +2,30 @@ package vehicles
 
 import (
 	"context"
-
-	"github.com/v2code/autolog/internal/persistence"
-	"github.com/v2code/autolog/internal/persistence/entities"
+	"errors"
 )
 
 type Service struct {
-	repo persistence.VehiclePersistence
+	store *Store
 }
 
-func NewService(repo persistence.VehiclePersistence) *Service {
-	return &Service{repo: repo}
+func NewService(store *Store) *Service {
+	return &Service{store: store}
 }
 
-func (s *Service) List(ctx context.Context) ([]*entities.Vehicle, error) {
-	return s.repo.ListVehicles(ctx)
+func (s *Service) List(ctx context.Context) ([]*Vehicle, error) {
+	return s.store.ListVehicles(ctx, 1, 10000)
 }
 
-func (s *Service) Create(ctx context.Context, input CreateVehicleInput) (*entities.Vehicle, error) {
-	vehicle := &entities.Vehicle{
+func (s *Service) Create(ctx context.Context, input CreateVehicleInput) (*Vehicle, error) {
+	vehicle := &Vehicle{
 		Title:      input.Title,
 		Type:       input.Type,
 		KM:         input.KM,
-		LogEntries: []*entities.LogEntry{},
+		LogEntries: []*LogEntry{},
 	}
 
-	vehicle, err := s.repo.CreateVehicle(ctx, vehicle)
+	vehicle, err := s.store.CreateVehicle(ctx, vehicle)
 	if err != nil {
 		return nil, err
 	}
@@ -35,40 +33,41 @@ func (s *Service) Create(ctx context.Context, input CreateVehicleInput) (*entiti
 	return vehicle, nil
 }
 
-func (s *Service) Edit(ctx context.Context, id int, input EditVehicleInput) (*entities.Vehicle, error) {
-	patch := &entities.Vehicle{
-		ID:    id,
+func (s *Service) Edit(ctx context.Context, input EditVehicleInput) (*Vehicle, error) {
+	patch := &Vehicle{
+		ID:    input.ID,
 		Title: input.Title,
 		Type:  input.Type,
 		KM:    input.KM,
 	}
 
-	return s.repo.EditVehicle(ctx, patch)
+	return s.store.EditVehicle(ctx, patch)
 }
 
-func (s *Service) Delete(ctx context.Context, id int) (*entities.Vehicle, error) {
-	return s.repo.DeleteVehicle(ctx, id)
+func (s *Service) Delete(ctx context.Context, id int) (*Vehicle, error) {
+	return s.store.DeleteVehicle(ctx, id)
 }
 
-func (s *Service) AddLog(ctx context.Context, input AddLogInput) (*entities.Vehicle, *entities.LogEntry, error) {
+func (s *Service) AddLog(ctx context.Context, input AddLogInput) (*Vehicle, *LogEntry, error) {
 	if !input.Type.Valid() {
-		return nil, nil, persistence.ErrInvalidLogEntryType
+		return nil, nil, errors.New("invalid log entry type")
 	}
 
-	entry := &entities.LogEntry{
-		Name: input.Name,
-		Type: input.Type,
-		Date: input.Date,
-		KM:   input.KM,
-		Cost: input.Cost,
+	entry := &LogEntry{
+		VehicleID: input.VehicleID,
+		Name:      input.Name,
+		Type:      input.Type,
+		Date:      input.Date,
+		KM:        input.KM,
+		Cost:      input.Cost,
 	}
 
-	inserted, err := s.repo.AddLogEntry(ctx, input.VehicleID, entry)
+	inserted, err := s.store.AddLogEntry(ctx, entry)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	vehicle, err := s.repo.GetVehicleByID(ctx, input.VehicleID)
+	vehicle, err := s.store.GetVehicleByID(ctx, input.VehicleID)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -76,25 +75,27 @@ func (s *Service) AddLog(ctx context.Context, input AddLogInput) (*entities.Vehi
 	return vehicle, inserted, nil
 }
 
-func (s *Service) EditLog(ctx context.Context, vehicleID, logEntryID int, input EditLogInput) (*entities.Vehicle, *entities.LogEntry, error) {
+func (s *Service) EditLog(ctx context.Context, input EditLogInput) (*Vehicle, *LogEntry, error) {
 	if !input.Type.Valid() {
-		return nil, nil, persistence.ErrInvalidLogEntryType
+		return nil, nil, errors.New("invalid log entry type")
 	}
 
-	patch := &entities.LogEntry{
-		Name: input.Name,
-		Type: input.Type,
-		Date: input.Date,
-		KM:   input.KM,
-		Cost: input.Cost,
+	patch := &LogEntry{
+		ID:        input.ID,
+		VehicleID: input.VehicleID,
+		Name:      input.Name,
+		Type:      input.Type,
+		Date:      input.Date,
+		KM:        input.KM,
+		Cost:      input.Cost,
 	}
 
-	updated, err := s.repo.EditLogEntry(ctx, vehicleID, logEntryID, patch)
+	updated, err := s.store.EditLogEntry(ctx, patch)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	vehicle, err := s.repo.GetVehicleByID(ctx, vehicleID)
+	vehicle, err := s.store.GetVehicleByID(ctx, patch.VehicleID)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -102,13 +103,13 @@ func (s *Service) EditLog(ctx context.Context, vehicleID, logEntryID int, input 
 	return vehicle, updated, nil
 }
 
-func (s *Service) DeleteLog(ctx context.Context, vehicleID, logEntryID int) (*entities.Vehicle, *entities.LogEntry, error) {
-	deleted, err := s.repo.DeleteLogEntry(ctx, vehicleID, logEntryID)
+func (s *Service) DeleteLog(ctx context.Context, vehicleID, logEntryID int) (*Vehicle, *LogEntry, error) {
+	deleted, err := s.store.DeleteLogEntry(ctx, vehicleID, logEntryID)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	vehicle, err := s.repo.GetVehicleByID(ctx, vehicleID)
+	vehicle, err := s.store.GetVehicleByID(ctx, vehicleID)
 	if err != nil {
 		return nil, nil, err
 	}

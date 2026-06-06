@@ -1,7 +1,6 @@
 {{ define "vehicles_list_item" }}
 
 {{ $vehicle := . }}
-{{ $logEntryCount := $vehicle.LogEntryCount }}
 
 <div
   id="vehicles-list-item-{{ $vehicle.ID }}"
@@ -26,7 +25,7 @@
       </div>
       <div class="flex items-center justify-between py-2.5">
         <span class="text-[11px] tracking-[0.16em] uppercase text-neutral-500 dark:text-stone-400">Entradas</span>
-        <span id="vehicle-log-entry-count-{{ $vehicle.ID }}" class="text-sm font-bold dark:text-amber-100">{{ template "log_entry_count_text" $logEntryCount }}</span>
+        {{ template "log_entry_count_text" $vehicle }}
       </div>
     </div>
 

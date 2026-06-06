@@ -6,9 +6,9 @@ import (
 	"log"
 	nethttp "net/http"
 
+	"github.com/v2code/autolog/internal/database"
 	"github.com/v2code/autolog/internal/functions"
 	"github.com/v2code/autolog/internal/http"
-	"github.com/v2code/autolog/internal/persistence/mocks"
 	"github.com/v2code/autolog/internal/ui"
 	"github.com/v2code/autolog/internal/vehicles"
 )
@@ -31,6 +31,7 @@ func main() {
 			"internal/templates/components/modals/edit_log_entry_modal.html",
 			"internal/templates/components/modals/delete_vehicle_modal.html",
 			"internal/templates/components/modals/delete_log_entry_modal.html",
+			"internal/templates/components/lists/log_entry_amount_text.html",
 			"internal/templates/components/lists/vehicles_list.html",
 			"internal/templates/components/lists/vehicles_list_item.html",
 			"internal/templates/components/lists/log_list.html",
@@ -54,7 +55,14 @@ func main() {
 		"internal/templates/pages/home_page.html",
 	)
 
-	vehicleService := vehicles.NewService(mocks.NewVehiclePersistenceMock())
+	conn := database.OpenDatabase()
+	defer conn.Close()
+
+	db := database.NewDatabase(conn)
+
+	vehicleStore := vehicles.NewStore(db)
+
+	vehicleService := vehicles.NewService(vehicleStore)
 	engine := ui.NewEngine(homeTemplate)
 	handler := http.NewVehicleHandler(vehicleService, engine)
 

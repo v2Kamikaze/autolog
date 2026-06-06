@@ -7,8 +7,6 @@ import (
 	"time"
 
 	"github.com/gorilla/schema"
-	"github.com/v2code/autolog/internal/persistence"
-	"github.com/v2code/autolog/internal/persistence/entities"
 	"github.com/v2code/autolog/internal/ui"
 	"github.com/v2code/autolog/internal/vehicles"
 )
@@ -37,13 +35,13 @@ func (h *VehicleHandler) Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.ui.WriteHTML(w, vehicles.Home(list)); err != nil {
+	if err := h.ui.WriteHTML(w, vehicles.HomeView(list)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 func (h *VehicleHandler) CreateVehicle(w http.ResponseWriter, r *http.Request) {
-	form, err := decodeForm[CreateVehicleForm](h, r)
+	form, err := ParseForm[CreateVehicleForm](h, r)
 	if err != nil {
 		http.Error(w, "invalid form data", http.StatusBadRequest)
 		return
@@ -59,7 +57,7 @@ func (h *VehicleHandler) CreateVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.ui.WriteTurbo(w, vehicles.VehicleCreated(vehicle)); err != nil {
+	if err := h.ui.WriteTurbo(w, vehicles.VehicleCreatedView(vehicle)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -71,7 +69,7 @@ func (h *VehicleHandler) AddLogEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	form, err := decodeForm[AddLogEntryForm](h, r)
+	form, err := ParseForm[AddLogEntryForm](h, r)
 	if err != nil {
 		http.Error(w, "invalid form data", http.StatusBadRequest)
 		return
@@ -86,17 +84,17 @@ func (h *VehicleHandler) AddLogEntry(w http.ResponseWriter, r *http.Request) {
 	vehicle, entry, err := h.vehicles.AddLog(r.Context(), vehicles.AddLogInput{
 		VehicleID: vehicleID,
 		Name:      form.Name,
-		Type:      entities.LogEntryCategory(form.EntryType),
+		Type:      vehicles.LogEntryCategory(form.EntryType),
 		Date:      date,
 		KM:        form.KM,
 		Cost:      form.Cost,
 	})
 	if err != nil {
-		writePersistenceError(w, err)
+		http.Error(w, "failed to add log entry", http.StatusInternalServerError)
 		return
 	}
 
-	if err := h.ui.WriteTurbo(w, vehicles.LogEntryAdded(vehicle, entry)); err != nil {
+	if err := h.ui.WriteTurbo(w, vehicles.LogEntryAddedView(vehicle, entry)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -114,7 +112,7 @@ func (h *VehicleHandler) EditLogEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	form, err := decodeForm[EditLogEntryForm](h, r)
+	form, err := ParseForm[EditLogEntryForm](h, r)
 	if err != nil {
 		http.Error(w, "invalid form data", http.StatusBadRequest)
 		return
@@ -126,19 +124,21 @@ func (h *VehicleHandler) EditLogEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vehicle, entry, err := h.vehicles.EditLog(r.Context(), vehicleID, logEntryID, vehicles.EditLogInput{
-		Name: form.Name,
-		Type: entities.LogEntryCategory(form.EntryType),
-		Date: date,
-		KM:   form.KM,
-		Cost: form.Cost,
+	vehicle, entry, err := h.vehicles.EditLog(r.Context(), vehicles.EditLogInput{
+		ID:        logEntryID,
+		VehicleID: vehicleID,
+		Name:      form.Name,
+		Type:      vehicles.LogEntryCategory(form.EntryType),
+		Date:      date,
+		KM:        form.KM,
+		Cost:      form.Cost,
 	})
 	if err != nil {
-		writePersistenceError(w, err)
+		http.Error(w, "failed to edit log entry", http.StatusInternalServerError)
 		return
 	}
 
-	if err := h.ui.WriteTurbo(w, vehicles.LogEntryUpdated(vehicle, entry)); err != nil {
+	if err := h.ui.WriteTurbo(w, vehicles.LogEntryUpdatedView(vehicle, entry)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -150,27 +150,24 @@ func (h *VehicleHandler) EditVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	form, err := decodeForm[EditVehicleForm](h, r)
+	form, err := ParseForm[EditVehicleForm](h, r)
 	if err != nil {
 		http.Error(w, "invalid form data", http.StatusBadRequest)
 		return
 	}
 
-	vehicle, err := h.vehicles.Edit(r.Context(), vehicleID, vehicles.EditVehicleInput{
+	vehicle, err := h.vehicles.Edit(r.Context(), vehicles.EditVehicleInput{
+		ID:    vehicleID,
 		Title: form.Title,
 		Type:  form.VehicleType,
 		KM:    form.KM,
 	})
 	if err != nil {
-		if errors.Is(err, persistence.ErrVehicleNotFound) {
-			http.Error(w, "vehicle not found", http.StatusNotFound)
-			return
-		}
 		http.Error(w, "failed to edit vehicle", http.StatusInternalServerError)
 		return
 	}
 
-	if err := h.ui.WriteTurbo(w, vehicles.VehicleUpdated(vehicle)); err != nil {
+	if err := h.ui.WriteTurbo(w, vehicles.VehicleUpdatedView(vehicle)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -188,7 +185,7 @@ func (h *VehicleHandler) DeleteVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.ui.WriteTurbo(w, vehicles.VehicleDeleted(vehicle)); err != nil {
+	if err := h.ui.WriteTurbo(w, vehicles.VehicleDeletedView(vehicle)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -208,24 +205,13 @@ func (h *VehicleHandler) DeleteLogEntry(w http.ResponseWriter, r *http.Request) 
 
 	vehicle, entry, err := h.vehicles.DeleteLog(r.Context(), vehicleID, logEntryID)
 	if err != nil {
-		writePersistenceError(w, err)
+		http.Error(w, "failed to delete log entry", http.StatusInternalServerError)
 		return
 	}
 
-	if err := h.ui.WriteTurbo(w, vehicles.LogEntryDeleted(vehicle, entry)); err != nil {
+	if err := h.ui.WriteTurbo(w, vehicles.LogEntryDeletedView(vehicle, entry)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-}
-
-func decodeForm[T any](h *VehicleHandler, r *http.Request) (T, error) {
-	var form T
-	if err := r.ParseForm(); err != nil {
-		return form, err
-	}
-	if err := h.formDecoder.Decode(&form, r.PostForm); err != nil {
-		return form, err
-	}
-	return form, nil
 }
 
 func pathID(r *http.Request, key string, name string) (int, error) {
@@ -234,17 +220,4 @@ func pathID(r *http.Request, key string, name string) (int, error) {
 		return 0, errors.New("invalid " + name + " id")
 	}
 	return id, nil
-}
-
-func writePersistenceError(w http.ResponseWriter, err error) {
-	switch {
-	case errors.Is(err, persistence.ErrVehicleNotFound):
-		http.Error(w, "vehicle not found", http.StatusNotFound)
-	case errors.Is(err, persistence.ErrLogEntryNotFound):
-		http.Error(w, "log entry not found", http.StatusNotFound)
-	case errors.Is(err, persistence.ErrInvalidLogEntryType):
-		http.Error(w, "invalid entry type", http.StatusBadRequest)
-	default:
-		http.Error(w, "request failed", http.StatusInternalServerError)
-	}
 }

@@ -1,0 +1,10 @@
+{{ define "log_entry_amount_text" }}
+
+{{ $vehicle := . }}
+
+<div id="total-cost-{{ $vehicle.ID }}" class="mt-5 border-t-[3px] border-double border-neutral-900 pt-3 text-center dark:border-stone-600">
+    <div class="text-[11px] tracking-[0.2em] text-neutral-500 uppercase dark:text-stone-400">Total investido</div>
+    <div class="mt-2 font-['Playfair_Display',serif] text-4xl leading-none font-black text-neutral-900 dark:text-amber-50">{{ FmtCurrency $vehicle.TotalCost }}</div>
+</div>
+
+{{ end }}

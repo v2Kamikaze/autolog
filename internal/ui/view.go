@@ -5,6 +5,8 @@ import (
 	"io"
 )
 
+type Data map[string]any
+
 type View struct {
 	TemplateName string
 	Data         Data
