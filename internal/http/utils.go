@@ -2,6 +2,7 @@ package http
 
 import (
 	"net/http"
+	"strconv"
 )
 
 func ParseForm[T any](h *VehicleHandler, r *http.Request) (T, error) {
@@ -13,4 +14,13 @@ func ParseForm[T any](h *VehicleHandler, r *http.Request) (T, error) {
 		return form, err
 	}
 	return form, nil
+}
+
+func ParseInt(v string) int {
+	i, err := strconv.Atoi(v)
+	if err != nil {
+		return 0
+	}
+
+	return i
 }

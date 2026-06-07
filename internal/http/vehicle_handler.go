@@ -47,7 +47,7 @@ func (h *VehicleHandler) CreateVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vehicle, err := h.vehicles.Create(r.Context(), vehicles.CreateVehicleInput{
+	vehicle, err := h.vehicles.Create(r.Context(), vehicles.CreateVehicleParams{
 		Title: form.Title,
 		Type:  form.VehicleType,
 		KM:    form.KM,
@@ -81,7 +81,7 @@ func (h *VehicleHandler) AddLogEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vehicle, entry, err := h.vehicles.AddLog(r.Context(), vehicles.AddLogInput{
+	vehicle, entry, err := h.vehicles.AddLog(r.Context(), vehicles.AddLogParams{
 		VehicleID: vehicleID,
 		Name:      form.Name,
 		Type:      vehicles.LogEntryCategory(form.EntryType),
@@ -124,7 +124,7 @@ func (h *VehicleHandler) EditLogEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vehicle, entry, err := h.vehicles.EditLog(r.Context(), vehicles.EditLogInput{
+	vehicle, entry, err := h.vehicles.EditLog(r.Context(), vehicles.EditLogParams{
 		ID:        logEntryID,
 		VehicleID: vehicleID,
 		Name:      form.Name,
@@ -156,7 +156,7 @@ func (h *VehicleHandler) EditVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vehicle, err := h.vehicles.Edit(r.Context(), vehicles.EditVehicleInput{
+	vehicle, err := h.vehicles.Edit(r.Context(), vehicles.EditVehicleParams{
 		ID:    vehicleID,
 		Title: form.Title,
 		Type:  form.VehicleType,

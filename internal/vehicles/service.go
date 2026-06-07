@@ -17,7 +17,7 @@ func (s *Service) List(ctx context.Context) ([]*Vehicle, error) {
 	return s.store.ListVehicles(ctx, 1, 10000)
 }
 
-func (s *Service) Create(ctx context.Context, input CreateVehicleInput) (*Vehicle, error) {
+func (s *Service) Create(ctx context.Context, input CreateVehicleParams) (*Vehicle, error) {
 	vehicle := &Vehicle{
 		Title:      input.Title,
 		Type:       input.Type,
@@ -33,7 +33,7 @@ func (s *Service) Create(ctx context.Context, input CreateVehicleInput) (*Vehicl
 	return vehicle, nil
 }
 
-func (s *Service) Edit(ctx context.Context, input EditVehicleInput) (*Vehicle, error) {
+func (s *Service) Edit(ctx context.Context, input EditVehicleParams) (*Vehicle, error) {
 	patch := &Vehicle{
 		ID:    input.ID,
 		Title: input.Title,
@@ -48,7 +48,7 @@ func (s *Service) Delete(ctx context.Context, id int) (*Vehicle, error) {
 	return s.store.DeleteVehicle(ctx, id)
 }
 
-func (s *Service) AddLog(ctx context.Context, input AddLogInput) (*Vehicle, *LogEntry, error) {
+func (s *Service) AddLog(ctx context.Context, input AddLogParams) (*Vehicle, *LogEntry, error) {
 	if !input.Type.Valid() {
 		return nil, nil, errors.New("invalid log entry type")
 	}
@@ -75,7 +75,7 @@ func (s *Service) AddLog(ctx context.Context, input AddLogInput) (*Vehicle, *Log
 	return vehicle, inserted, nil
 }
 
-func (s *Service) EditLog(ctx context.Context, input EditLogInput) (*Vehicle, *LogEntry, error) {
+func (s *Service) EditLog(ctx context.Context, input EditLogParams) (*Vehicle, *LogEntry, error) {
 	if !input.Type.Valid() {
 		return nil, nil, errors.New("invalid log entry type")
 	}

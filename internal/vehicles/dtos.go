@@ -4,20 +4,20 @@ import (
 	"time"
 )
 
-type CreateVehicleInput struct {
+type CreateVehicleParams struct {
 	Title string
 	Type  string
 	KM    int
 }
 
-type EditVehicleInput struct {
+type EditVehicleParams struct {
 	ID    int
 	Title string
 	Type  string
 	KM    int
 }
 
-type AddLogInput struct {
+type AddLogParams struct {
 	VehicleID int
 	Name      string
 	Type      LogEntryCategory
@@ -26,7 +26,7 @@ type AddLogInput struct {
 	Cost      int
 }
 
-type EditLogInput struct {
+type EditLogParams struct {
 	ID        int
 	VehicleID int
 	Name      string

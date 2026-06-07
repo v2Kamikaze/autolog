@@ -5,6 +5,9 @@
 @theme {
     --font-display: "Playfair Display", serif;
 
+    --color-wood-light: #4c3c2d;
+    --color-wood-dark: #2d241c;
+
     @keyframes expand-fade-in {
         from {
             width: 0;
