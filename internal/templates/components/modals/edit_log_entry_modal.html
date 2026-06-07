@@ -10,7 +10,7 @@
     <div class="absolute inset-0 z-0 bg-black/80" x-on:click="close()"></div>
 
     <div
-        class="relative z-10 w-full max-w-lg overflow-hidden border border-black/40 bg-amber-50 p-8 shadow-2xl dark:border-stone-600 dark:bg-linear-to-b dark:from-stone-900 dark:to-stone-950"
+        class="relative z-10 w-full max-w-lg border border-black/40 bg-amber-50 p-8 shadow-2xl dark:border-stone-600 dark:bg-linear-to-b dark:from-stone-900 dark:to-stone-950"
         x-on:click.stop
     >
         <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.04)_1px,transparent_1px)] bg-size-[3px_3px] opacity-35 dark:bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] dark:opacity-55"></div>
@@ -38,37 +38,45 @@
             x-bind:action="`/vehicles/${data.vehicleId}/log-entries/${data.id}`"
             x-effect="
                 if (!isOpen) return;
-                cents = data.cost ?? 0;
-                if ($refs.costInput) $refs.costInput.value = formatCents(cents);
-                if ($refs.nameInput) $refs.nameInput.value = data.name ?? '';
-                if ($refs.notesInput) $refs.notesInput.value = data.notes ?? '';
-                if ($refs.dateInput) $refs.dateInput.value = data.date ?? '';
-                if ($refs.kmInput) $refs.kmInput.value = data.km ?? '';
-                if ($refs.typeInput) $refs.typeInput.value = data.entryType ?? '';
+                const cost = data.cost ?? 0;
+                cents = cost;
+                if ($refs.costInput) {
+                    $refs.costInput.value = formatCents(cost);
+                }
             "
             x-on:turbo:submit-start="loading = true"
             x-on:turbo:submit-end="loading = false; if (event.detail.success) { $el.reset(); cents = 0; close(); }"
         >
             <div class="mb-4">
                 <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Nome</label>
-                <input x-ref="nameInput" name="name" required class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none">
+                <input name="name" required x-bind:value="data.name || ''" class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none">
             </div>
 
             <div class="mb-4">
                 <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Tipo</label>
-                <select x-ref="typeInput" name="entry_type" required class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none">
-                    {{ template "log_entry_type_options" }}
+                <select name="entry_type" required class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none">
+                    <option value="maintenance" x-bind:selected="data.entryType === 'maintenance'">Manutenção</option>
+                    <option value="fuel" x-bind:selected="data.entryType === 'fuel'">Combustível</option>
+                    <option value="expense" x-bind:selected="data.entryType === 'expense'">Despesa</option>
+                    <option value="insurance" x-bind:selected="data.entryType === 'insurance'">Seguro</option>
+                    <option value="tax" x-bind:selected="data.entryType === 'tax'">Imposto</option>
+                    <option value="fine" x-bind:selected="data.entryType === 'fine'">Multa</option>
+                    <option value="parking" x-bind:selected="data.entryType === 'parking'">Estacionamento</option>
+                    <option value="cleaning" x-bind:selected="data.entryType === 'cleaning'">Lavagem</option>
+                    <option value="toll" x-bind:selected="data.entryType === 'toll'">Pedágio</option>
+                    <option value="accessory" x-bind:selected="data.entryType === 'accessory'">Acessório</option>
+                    <option value="other" x-bind:selected="data.entryType === 'other'">Outro</option>
                 </select>
             </div>
 
             <div class="mb-4">
                 <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Data</label>
-                <input x-ref="dateInput" type="date" name="date" required class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none">
+                <input type="date" name="date" required x-bind:value="data.date || ''" class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:scheme-dark dark:focus:border-stone-400 focus:outline-none">
             </div>
 
             <div class="mb-4">
                 <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">KM</label>
-                <input x-ref="kmInput" type="number" name="km" required class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none">
+                <input type="number" name="km" required x-bind:value="data.km ?? ''" class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none">
             </div>
 
             <div class="mb-4">
@@ -79,7 +87,7 @@
 
             <div class="mb-4">
                 <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Observações</label>
-                <input x-ref="notesInput" name="notes" class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none">
+                <input name="notes" x-bind:value="data.notes || ''" class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none">
             </div>
 
             <div class="mt-6 flex justify-end gap-3">

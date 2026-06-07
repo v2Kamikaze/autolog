@@ -1063,6 +1063,11 @@
       color: var(--color-stone-400);
     }
   }
+  .dark\:scheme-dark {
+    &:where(.dark, .dark *) {
+      color-scheme: dark;
+    }
+  }
   .dark\:opacity-55 {
     &:where(.dark, .dark *) {
       opacity: 55%;

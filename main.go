@@ -38,7 +38,6 @@ func main() {
 			"internal/templates/components/lists/log_list.html",
 			"internal/templates/components/lists/log_list_item.html",
 			"internal/templates/components/lists/log_list_empty.html",
-			"internal/templates/components/lists/log_entry_type_options.html",
 			"internal/templates/components/lists/log_entry_count_text.html",
 			"internal/templates/components/streams/add_vehicle_stream.html",
 			"internal/templates/components/streams/edit_vehicle_stream.html",

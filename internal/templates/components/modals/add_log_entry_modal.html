@@ -10,7 +10,7 @@
     <div class="absolute inset-0 z-0 bg-black/80" x-on:click="close()"></div>
 
     <div
-        class="relative z-10 w-full max-w-lg overflow-hidden border border-black/40 bg-amber-50 p-8 shadow-2xl dark:border-stone-600 dark:bg-linear-to-b dark:from-stone-900 dark:to-stone-950"
+        class="relative z-10 w-full max-w-lg border border-black/40 bg-amber-50 p-8 shadow-2xl dark:border-stone-600 dark:bg-linear-to-b dark:from-stone-900 dark:to-stone-950"
         x-on:click.stop
     >
         <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.04)_1px,transparent_1px)] bg-size-[3px_3px] opacity-35 dark:bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] dark:opacity-55"></div>
@@ -47,13 +47,23 @@
             <div class="mb-4">
                 <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Tipo</label>
                 <select name="entry_type" required class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none">
-                    {{ template "log_entry_type_options" }}
+                    <option value="maintenance">Manutenção</option>
+                    <option value="fuel">Combustível</option>
+                    <option value="expense">Despesa</option>
+                    <option value="insurance">Seguro</option>
+                    <option value="tax">Imposto</option>
+                    <option value="fine">Multa</option>
+                    <option value="parking">Estacionamento</option>
+                    <option value="cleaning">Lavagem</option>
+                    <option value="toll">Pedágio</option>
+                    <option value="accessory">Acessório</option>
+                    <option value="other">Outro</option>
                 </select>
             </div>
 
             <div class="mb-4">
                 <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Data</label>
-                <input type="date" name="date" required class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none">
+                <input type="date" name="date" required class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:scheme-dark dark:focus:border-stone-400 focus:outline-none">
             </div>
 
             <div class="mb-4">
