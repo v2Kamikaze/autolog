@@ -1,0 +1,11 @@
+{{ define "vehicles_list_empty" }}
+
+<div id="vehicles-list-empty" class="relative overflow-hidden border border-black/40 bg-amber-50 p-8 text-center shadow-2xl lg:col-span-2 dark:border-stone-600 dark:bg-linear-to-b dark:from-stone-900 dark:to-stone-950">
+  <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.03)_1px,transparent_1px)] bg-size-[3px_3px] opacity-50 dark:bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] dark:opacity-55"></div>
+  <div class="pointer-events-none absolute top-0 right-0 h-14 w-14 bg-[linear-gradient(-45deg,transparent_49%,rgba(0,0,0,0.08)_50%)] dark:bg-[linear-gradient(-45deg,transparent_49%,rgba(255,255,255,0.08)_50%)]"></div>
+  <p class="relative font-['Playfair_Display',serif] text-2xl leading-tight font-black uppercase text-neutral-900 dark:text-amber-50 dark:[text-shadow:0_1px_0_rgba(255,255,255,0.04)]">
+    Ainda não possui nenhum veículo registrado.
+  </p>
+</div>
+
+{{ end }}

@@ -1,20 +1,28 @@
 package vehicles
 
-import (
-	"time"
-)
+import "time"
 
 type CreateVehicleParams struct {
-	Title string
-	Type  string
-	KM    int
+	Brand        string
+	Model        string
+	Year         int
+	Version      string
+	Engine       string
+	Transmission TransmissionType
+	Fuel         FuelType
+	KM           int
 }
 
 type EditVehicleParams struct {
-	ID    int
-	Title string
-	Type  string
-	KM    int
+	ID           int
+	Brand        string
+	Model        string
+	Year         int
+	Version      string
+	Engine       string
+	Transmission TransmissionType
+	Fuel         FuelType
+	KM           int
 }
 
 type AddLogParams struct {
@@ -24,6 +32,7 @@ type AddLogParams struct {
 	Date      time.Time
 	KM        int
 	Cost      int
+	Notes     string
 }
 
 type EditLogParams struct {
@@ -34,4 +43,5 @@ type EditLogParams struct {
 	Date      time.Time
 	KM        int
 	Cost      int
+	Notes     string
 }

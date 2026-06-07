@@ -1,4 +1,6 @@
 {{ define "add_log_stream" }}
+<turbo-stream action="remove" target="log-entries-list-empty-{{ .LogEntry.VehicleID }}">
+</turbo-stream>
 <turbo-stream action="append" target="log-entries-list-{{ .LogEntry.VehicleID }}">
   <template>
     {{ template "log_list_item" .LogEntry }}

@@ -8,9 +8,7 @@
       {{ template "vehicles_list_item" . }}
     {{ end }}
   {{ else }}
-    <p class="rounded-sm bg-amber-50/90 p-6 text-center text-sm text-neutral-600 shadow-lg lg:col-span-2">
-      Ainda não possui nenhum veículo registrado.
-    </p>
+    {{ template "vehicles_list_empty" }}
   {{ end }}
 </div>
 

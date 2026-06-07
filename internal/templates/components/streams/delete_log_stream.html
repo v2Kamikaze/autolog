@@ -1,6 +1,13 @@
 {{ define "delete_log_stream" }}
 <turbo-stream action="remove" target="log-entries-list-item-{{ .LogEntry.ID }}">
 </turbo-stream>
+{{ if .IsEmpty }}
+<turbo-stream action="append" target="log-entries-list-{{ .LogEntry.VehicleID }}">
+  <template>
+    {{ template "log_list_empty" .Vehicle }}
+  </template>
+</turbo-stream>
+{{ end }}
 
 <turbo-stream action="update" target="total-cost-{{ .LogEntry.VehicleID }}">
   <template>

@@ -33,9 +33,12 @@ func main() {
 			"internal/templates/components/modals/delete_log_entry_modal.html",
 			"internal/templates/components/lists/log_entry_amount_text.html",
 			"internal/templates/components/lists/vehicles_list.html",
+			"internal/templates/components/lists/vehicles_list_empty.html",
 			"internal/templates/components/lists/vehicles_list_item.html",
 			"internal/templates/components/lists/log_list.html",
 			"internal/templates/components/lists/log_list_item.html",
+			"internal/templates/components/lists/log_list_empty.html",
+			"internal/templates/components/lists/log_entry_type_options.html",
 			"internal/templates/components/lists/log_entry_count_text.html",
 			"internal/templates/components/streams/add_vehicle_stream.html",
 			"internal/templates/components/streams/edit_vehicle_stream.html",
@@ -57,6 +60,10 @@ func main() {
 
 	conn := database.OpenDatabase()
 	defer conn.Close()
+
+	if err := database.Migrate(conn); err != nil {
+		log.Fatal(err)
+	}
 
 	db := database.NewDatabase(conn)
 

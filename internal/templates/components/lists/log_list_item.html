@@ -11,6 +11,9 @@
   <div class="mt-1.5 text-xs text-neutral-500 uppercase dark:text-stone-400">
     {{ FmtDate $entry.Date }} • {{ $entry.KM }} KM
   </div>
+  {{ if $entry.Notes }}
+  <div class="mt-1.5 text-xs normal-case text-neutral-600 dark:text-stone-400">{{ $entry.Notes }}</div>
+  {{ end }}
   <div class="mt-2 font-['Playfair_Display',serif] text-2xl leading-none font-bold text-neutral-900 dark:text-amber-50">
     {{ FmtCurrency $entry.Cost }}
   </div>
@@ -24,9 +27,10 @@
           data: {
               id: {{ $entry.ID }},
               vehicleId: {{ $entry.VehicleID }},
-              name: '{{ $entry.Name }}',
-              entryType: '{{ $entry.Type }}',
-              date: '{{ ToDate $entry.Date }}',
+              name: {{ JsQuote $entry.Name }},
+              notes: {{ JsQuote $entry.Notes }},
+              entryType: {{ JsQuote (printf "%s" $entry.Type) }},
+              date: {{ JsQuote (ToDate $entry.Date) }},
               km: {{ $entry.KM }},
               cost: {{ $entry.Cost }}
           }
@@ -44,8 +48,9 @@
           data: {
               vehicleId: {{ $entry.VehicleID }},
               logEntryId: {{ $entry.ID }},
-              name: '{{ $entry.Name }}',
-              date: '{{ FmtDate $entry.Date }}',
+              name: {{ JsQuote $entry.Name }},
+              typeLabel: {{ JsQuote $entry.Type.Label }},
+              date: {{ JsQuote (FmtDate $entry.Date) }},
               km: {{ $entry.KM }},
               cost: {{ $entry.Cost }}
           }

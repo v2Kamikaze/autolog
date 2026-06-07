@@ -7,10 +7,7 @@
     x-transition
     class="fixed inset-0 z-50 flex items-center justify-center p-4"
 >
-    <div
-        class="absolute inset-0 z-0 bg-black/80"
-        x-on:click="close()"
-    ></div>
+    <div class="absolute inset-0 z-0 bg-black/80" x-on:click="close()"></div>
 
     <div
         class="relative z-10 w-full max-w-lg overflow-hidden border border-black/40 bg-amber-50 p-8 shadow-2xl sm:max-w-xl dark:border-stone-600 dark:bg-linear-to-b dark:from-stone-900 dark:to-stone-950"
@@ -18,11 +15,7 @@
     >
         <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.04)_1px,transparent_1px)] bg-size-[3px_3px] opacity-35 dark:bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] dark:opacity-55"></div>
         <div class="pointer-events-none absolute top-0 right-0 h-14 w-14 bg-[linear-gradient(-45deg,transparent_49%,rgba(0,0,0,0.08)_50%)] dark:bg-[linear-gradient(-45deg,transparent_49%,rgba(255,255,255,0.08)_50%)]"></div>
-        <button
-            type="button"
-            x-on:click="close()"
-            class="absolute top-6 right-6 z-10 flex size-11 cursor-pointer items-center justify-center border border-neutral-900/70 bg-amber-50 text-neutral-900 transition hover:-translate-y-0.5 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50"
-        >
+        <button type="button" x-on:click="close()" class="absolute top-6 right-6 z-10 flex size-11 cursor-pointer items-center justify-center border border-neutral-900/70 bg-amber-50 text-neutral-900 transition hover:-translate-y-0.5 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50">
             {{ template "icon_x" "w-4 h-4" }}
         </button>
 
@@ -34,59 +27,67 @@
             action="/vehicles"
             x-data="{ loading: false }"
             x-on:turbo:submit-start="loading = true"
-            x-on:turbo:submit-end="
-                loading = false;
-                if (event.detail.success) {
-                    $el.reset();
-                    close();
-                }
-            "
+            x-on:turbo:submit-end="loading = false; if (event.detail.success) { $el.reset(); close(); }"
         >
-            <div class="mb-4">
-                <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Título</label>
-                <input
-                    name="title"
-                    required
-                    class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none"
-                >
+            <div class="mb-4 grid grid-cols-2 gap-3">
+                <div>
+                    <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Marca</label>
+                    <input name="brand" required placeholder="Toyota" class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400">
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Modelo</label>
+                    <input name="model" required placeholder="Etios Sedan" class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400">
+                </div>
+            </div>
+
+            <div class="mb-4 grid grid-cols-2 gap-3">
+                <div>
+                    <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Ano</label>
+                    <input type="number" name="year" required placeholder="2019" class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400">
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Versão</label>
+                    <input name="version" placeholder="X Plus" class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400">
+                </div>
             </div>
 
             <div class="mb-4">
-                <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Tipo</label>
-                <input
-                    name="vehicle_type"
-                    required
-                    placeholder="sedan, hatch, suv..."
-                    class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-600 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none"
-                >
+                <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Motor</label>
+                <input name="engine" placeholder="1.5" class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400">
+            </div>
+
+            <div class="mb-4 grid grid-cols-2 gap-3">
+                <div>
+                    <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Câmbio</label>
+                    <select name="transmission" required class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400">
+                        <option value="manual">Manual</option>
+                        <option value="automatic">Automático</option>
+                        <option value="cvt">CVT</option>
+                        <option value="automated">Automatizado</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">Combustível</label>
+                    <select name="fuel" required class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400">
+                        <option value="gasoline">Gasolina</option>
+                        <option value="ethanol">Etanol</option>
+                        <option value="flex">Flex</option>
+                        <option value="diesel">Diesel</option>
+                        <option value="hybrid">Híbrido</option>
+                        <option value="electric">Elétrico</option>
+                    </select>
+                </div>
             </div>
 
             <div class="mb-4">
                 <label class="mb-1 block text-xs tracking-widest text-neutral-500 uppercase">KM</label>
-                <input
-                    type="number"
-                    name="km"
-                    required
-                    class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400 focus:outline-none"
-                >
+                <input type="number" name="km" required class="w-full border border-neutral-900/50 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50 dark:focus:border-stone-400">
             </div>
 
             <div class="mt-6 flex justify-end gap-3">
-                <button
-                    type="button"
-                    x-on:click="close()"
-                    class="cursor-pointer border border-neutral-900/70 bg-amber-50 px-5 py-3 text-sm font-bold tracking-wide text-neutral-900 uppercase shadow-lg transition duration-250 hover:-translate-y-1 hover:rotate-1 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50"
-                >
-                    Cancelar
-                </button>
-                <button
-                    type="submit"
-                    x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }"
-                    class="flex cursor-pointer items-center gap-2 border border-neutral-900/70 bg-amber-50 px-5 py-3 text-sm font-bold tracking-wide text-neutral-900 uppercase shadow-lg transition duration-250 hover:-translate-y-1 hover:-rotate-1 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50"
-                >
-                    <span x-show="loading" class="inline-flex shrink-0">
-                        {{ template "icon_loader" "w-4 h-4 animate-spin" }}
-                    </span>
+                <button type="button" x-on:click="close()" class="cursor-pointer border border-neutral-900/70 bg-amber-50 px-5 py-3 text-sm font-bold tracking-wide text-neutral-900 uppercase shadow-lg transition duration-250 hover:-translate-y-1 hover:rotate-1 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50">Cancelar</button>
+                <button type="submit" x-bind:class="{ 'opacity-50 pointer-events-none cursor-not-allowed': loading }" class="flex cursor-pointer items-center gap-2 border border-neutral-900/70 bg-amber-50 px-5 py-3 text-sm font-bold tracking-wide text-neutral-900 uppercase shadow-lg transition duration-250 hover:-translate-y-1 hover:-rotate-1 dark:border-stone-600 dark:bg-stone-950 dark:text-amber-50">
+                    <span x-show="loading" class="inline-flex shrink-0">{{ template "icon_loader" "w-4 h-4 animate-spin" }}</span>
                     <span x-text="loading ? 'Cadastrando...' : 'Cadastrar'"></span>
                 </button>
             </div>

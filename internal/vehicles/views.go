@@ -31,11 +31,12 @@ func VehicleUpdatedView(vehicle *Vehicle) ui.View {
 	}
 }
 
-func VehicleDeletedView(vehicle *Vehicle) ui.View {
+func VehicleDeletedView(vehicle *Vehicle, isEmpty bool) ui.View {
 	return ui.View{
 		TemplateName: "delete_vehicle_stream",
 		Data: ui.Data{
 			"Vehicle": vehicle,
+			"IsEmpty": isEmpty,
 		},
 	}
 }
@@ -60,12 +61,13 @@ func LogEntryUpdatedView(vehicle *Vehicle, entry *LogEntry) ui.View {
 	}
 }
 
-func LogEntryDeletedView(vehicle *Vehicle, entry *LogEntry) ui.View {
+func LogEntryDeletedView(vehicle *Vehicle, entry *LogEntry, isEmpty bool) ui.View {
 	return ui.View{
 		TemplateName: "delete_log_stream",
 		Data: ui.Data{
 			"LogEntry": entry,
 			"Vehicle":  vehicle,
+			"IsEmpty":  isEmpty,
 		},
 	}
 }

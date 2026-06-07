@@ -12,10 +12,11 @@
 
   <div class="relative">
     <h2 class="font-['Playfair_Display',serif] text-5xl leading-[0.9] font-black uppercase wrap-break-word text-neutral-900 max-[700px]:text-4xl dark:text-amber-50 dark:[text-shadow:0_1px_0_rgba(255,255,255,0.04)]">
-      {{ $vehicle.Title }}
+      {{ $vehicle.Brand }} {{ $vehicle.Model }}
     </h2>
+
     <p class="mt-2 text-sm tracking-[0.15em] uppercase text-neutral-500 dark:text-stone-400">
-      {{ if $vehicle.Type }}{{ $vehicle.Type }}{{ else }}—{{ end }}
+      {{ if $vehicle.Version }}{{ $vehicle.Version }}{{ end }}{{ if $vehicle.Engine }} {{ $vehicle.Engine }}{{ end }}{{ if gt $vehicle.Year 0 }} • {{ $vehicle.Year }}{{ end }}{{ if $vehicle.Transmission }} • {{ $vehicle.Transmission.Label }}{{ end }}{{ if $vehicle.Fuel }} • {{ $vehicle.Fuel.Label }}{{ end }}
     </p>
 
     <div class="mt-5 border-y border-neutral-900 dark:border-stone-600">
@@ -43,7 +44,7 @@
         type="button"
         title="Editar veículo"
         class="flex size-10 cursor-pointer items-center justify-center border border-neutral-900/70 bg-amber-50 text-neutral-900 transition hover:-translate-y-0.5 dark:border-neutral-100/50 dark:bg-neutral-950 dark:text-neutral-100"
-        x-on:click.stop="$dispatch('open-modal', { modalId: 'edit-vehicle', data: { vehicleId: {{ $vehicle.ID }}, title: '{{ $vehicle.Title }}', vehicleType: '{{ $vehicle.Type }}', km: {{ $vehicle.KM }} } })"
+        x-on:click.stop="$dispatch('open-modal', { modalId: 'edit-vehicle', data: { vehicleId: {{ $vehicle.ID }}, brand: {{ JsQuote $vehicle.Brand }}, model: {{ JsQuote $vehicle.Model }}, year: {{ $vehicle.Year }}, version: {{ JsQuote $vehicle.Version }}, engine: {{ JsQuote $vehicle.Engine }}, transmission: {{ JsQuote (printf "%s" $vehicle.Transmission) }}, fuel: {{ JsQuote (printf "%s" $vehicle.Fuel) }}, km: {{ $vehicle.KM }} } })"
       >
         {{ template "icon_edit" "w-4 h-4" }}
       </button>
@@ -52,7 +53,7 @@
         type="button"
         title="Excluir veículo"
         class="flex size-10 cursor-pointer items-center justify-center border border-red-700/70 bg-red-700 text-neutral-100 transition hover:-translate-y-0.5 dark:border-red-400/50 dark:bg-red-500/80"
-        x-on:click.stop="$dispatch('open-modal', { modalId: 'delete-vehicle', data: { vehicleId: {{ $vehicle.ID }}, title: '{{ $vehicle.Title }}', km: {{ $vehicle.KM }} } })"
+        x-on:click.stop="$dispatch('open-modal', { modalId: 'delete-vehicle', data: { vehicleId: {{ $vehicle.ID }}, displayName: {{ JsQuote $vehicle.DisplayName }}, km: {{ $vehicle.KM }} } })"
       >
         {{ template "icon_x" "w-4 h-4" }}
       </button>

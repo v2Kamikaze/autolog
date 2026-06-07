@@ -16,7 +16,17 @@ func NewStore(db database.Database) *Store {
 }
 
 func (s *Store) CreateVehicle(ctx context.Context, vehicle *Vehicle) (*Vehicle, error) {
-	row := s.database.Executor(ctx).QueryRowContext(ctx, "INSERT INTO vehicles(title, type, km) VALUES($1, $2, $3) RETURNING id", vehicle.Title, vehicle.Type, vehicle.KM)
+	row := s.database.Executor(ctx).QueryRowContext(ctx,
+		"INSERT INTO vehicles(brand, model, year, version, engine, transmission, fuel, km) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
+		vehicle.Brand,
+		vehicle.Model,
+		vehicle.Year,
+		vehicle.Version,
+		vehicle.Engine,
+		vehicle.Transmission,
+		vehicle.Fuel,
+		vehicle.KM,
+	)
 
 	var id int64
 
@@ -28,11 +38,16 @@ func (s *Store) CreateVehicle(ctx context.Context, vehicle *Vehicle) (*Vehicle, 
 	}
 
 	return &Vehicle{
-		ID:         int(id),
-		Title:      vehicle.Title,
-		Type:       vehicle.Type,
-		KM:         vehicle.KM,
-		LogEntries: vehicle.LogEntries,
+		ID:           int(id),
+		Brand:        vehicle.Brand,
+		Model:        vehicle.Model,
+		Year:         vehicle.Year,
+		Version:      vehicle.Version,
+		Engine:       vehicle.Engine,
+		Transmission: vehicle.Transmission,
+		Fuel:         vehicle.Fuel,
+		KM:           vehicle.KM,
+		LogEntries:   vehicle.LogEntries,
 	}, nil
 }
 
@@ -69,7 +84,11 @@ func (s *Store) ListVehicles(ctx context.Context, page int, size int) ([]*Vehicl
 }
 
 func (s *Store) getVehicles(ctx context.Context, page int, size int) ([]*Vehicle, error) {
-	rows, err := s.database.Executor(ctx).QueryContext(ctx, "SELECT id, title, type, km FROM vehicles LIMIT $1 OFFSET $2", size, (page-1)*size)
+	rows, err := s.database.Executor(ctx).QueryContext(ctx,
+		"SELECT id, brand, model, year, version, engine, transmission, fuel, km FROM vehicles LIMIT $1 OFFSET $2",
+		size,
+		(page-1)*size,
+	)
 	if err != nil {
 		log.Println("Error getting vehicles:", err)
 		return []*Vehicle{}, err
@@ -86,7 +105,17 @@ func (s *Store) getVehicles(ctx context.Context, page int, size int) ([]*Vehicle
 	for rows.Next() {
 		var vehicle Vehicle
 
-		if err := rows.Scan(&vehicle.ID, &vehicle.Title, &vehicle.Type, &vehicle.KM); err != nil {
+		if err := rows.Scan(
+			&vehicle.ID,
+			&vehicle.Brand,
+			&vehicle.Model,
+			&vehicle.Year,
+			&vehicle.Version,
+			&vehicle.Engine,
+			&vehicle.Transmission,
+			&vehicle.Fuel,
+			&vehicle.KM,
+		); err != nil {
 			log.Println("Error scanning row:", err)
 			return []*Vehicle{}, err
 		}
@@ -98,7 +127,10 @@ func (s *Store) getVehicles(ctx context.Context, page int, size int) ([]*Vehicle
 }
 
 func (s *Store) getLogEntries(ctx context.Context, ids ...int) ([]*LogEntry, error) {
-	rows, err := s.database.Executor(ctx).QueryContext(ctx, "SELECT id, vehicle_id, name, type, date, km, cost FROM log_entries WHERE vehicle_id = ANY($1) ", ids)
+	rows, err := s.database.Executor(ctx).QueryContext(ctx,
+		"SELECT id, vehicle_id, name, notes, type, date, km, cost FROM log_entries WHERE vehicle_id = ANY($1)",
+		ids,
+	)
 
 	if err != nil {
 		log.Println("Error getting log entries:", err)
@@ -116,7 +148,16 @@ func (s *Store) getLogEntries(ctx context.Context, ids ...int) ([]*LogEntry, err
 	for rows.Next() {
 		var logEntry LogEntry
 
-		if err := rows.Scan(&logEntry.ID, &logEntry.VehicleID, &logEntry.Name, &logEntry.Type, &logEntry.Date, &logEntry.KM, &logEntry.Cost); err != nil {
+		if err := rows.Scan(
+			&logEntry.ID,
+			&logEntry.VehicleID,
+			&logEntry.Name,
+			&logEntry.Notes,
+			&logEntry.Type,
+			&logEntry.Date,
+			&logEntry.KM,
+			&logEntry.Cost,
+		); err != nil {
 			log.Println("Error scanning row:", err)
 			return []*LogEntry{}, err
 		}
@@ -128,11 +169,24 @@ func (s *Store) getLogEntries(ctx context.Context, ids ...int) ([]*LogEntry, err
 }
 
 func (s *Store) GetVehicleByID(ctx context.Context, id int) (*Vehicle, error) {
-	row := s.database.Executor(ctx).QueryRowContext(ctx, "SELECT id, title, type, km FROM vehicles WHERE id = $1", id)
+	row := s.database.Executor(ctx).QueryRowContext(ctx,
+		"SELECT id, brand, model, year, version, engine, transmission, fuel, km FROM vehicles WHERE id = $1",
+		id,
+	)
 
 	var vehicle Vehicle
 
-	if err := row.Scan(&vehicle.ID, &vehicle.Title, &vehicle.Type, &vehicle.KM); err != nil {
+	if err := row.Scan(
+		&vehicle.ID,
+		&vehicle.Brand,
+		&vehicle.Model,
+		&vehicle.Year,
+		&vehicle.Version,
+		&vehicle.Engine,
+		&vehicle.Transmission,
+		&vehicle.Fuel,
+		&vehicle.KM,
+	); err != nil {
 		log.Println("Error getting vehicle:", err)
 		return nil, err
 	}
@@ -150,9 +204,10 @@ func (s *Store) GetVehicleByID(ctx context.Context, id int) (*Vehicle, error) {
 
 func (s *Store) AddLogEntry(ctx context.Context, logEntry *LogEntry) (*LogEntry, error) {
 	row := s.database.Executor(ctx).QueryRowContext(ctx,
-		"INSERT INTO log_entries(vehicle_id, name, type, date, km, cost) VALUES($1, $2, $3, $4, $5, $6) RETURNING id",
+		"INSERT INTO log_entries(vehicle_id, name, notes, type, date, km, cost) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id",
 		logEntry.VehicleID,
 		logEntry.Name,
+		logEntry.Notes,
 		logEntry.Type,
 		logEntry.Date,
 		logEntry.KM,
@@ -173,13 +228,15 @@ func (s *Store) AddLogEntry(ctx context.Context, logEntry *LogEntry) (*LogEntry,
 		Date:      logEntry.Date,
 		KM:        logEntry.KM,
 		Cost:      logEntry.Cost,
+		Notes:     logEntry.Notes,
 	}, nil
 }
 
 func (s *Store) EditLogEntry(ctx context.Context, patch *LogEntry) (*LogEntry, error) {
 	_, err := s.database.Executor(ctx).ExecContext(ctx,
-		"UPDATE log_entries SET name = $1, type = $2, date = $3, km = $4, cost = $5 WHERE id = $6 AND vehicle_id = $7 ",
+		"UPDATE log_entries SET name = $1, notes = $2, type = $3, date = $4, km = $5, cost = $6 WHERE id = $7 AND vehicle_id = $8",
 		patch.Name,
+		patch.Notes,
 		patch.Type,
 		patch.Date,
 		patch.KM,
@@ -198,9 +255,14 @@ func (s *Store) EditLogEntry(ctx context.Context, patch *LogEntry) (*LogEntry, e
 
 func (s *Store) EditVehicle(ctx context.Context, patch *Vehicle) (*Vehicle, error) {
 	_, err := s.database.Executor(ctx).ExecContext(ctx,
-		"UPDATE vehicles SET title = $1, type = $2, km = $3 WHERE id = $4 ",
-		patch.Title,
-		patch.Type,
+		"UPDATE vehicles SET brand = $1, model = $2, year = $3, version = $4, engine = $5, transmission = $6, fuel = $7, km = $8 WHERE id = $9",
+		patch.Brand,
+		patch.Model,
+		patch.Year,
+		patch.Version,
+		patch.Engine,
+		patch.Transmission,
+		patch.Fuel,
 		patch.KM,
 		patch.ID,
 	)
@@ -222,11 +284,24 @@ func (s *Store) EditVehicle(ctx context.Context, patch *Vehicle) (*Vehicle, erro
 }
 
 func (s *Store) DeleteVehicle(ctx context.Context, id int) (*Vehicle, error) {
-	row := s.database.Executor(ctx).QueryRowContext(ctx, "DELETE FROM vehicles WHERE id = $1 RETURNING id, title, type, km", id)
+	row := s.database.Executor(ctx).QueryRowContext(ctx,
+		"DELETE FROM vehicles WHERE id = $1 RETURNING id, brand, model, year, version, engine, transmission, fuel, km",
+		id,
+	)
 
 	var vehicle Vehicle
 
-	if err := row.Scan(&vehicle.ID, &vehicle.Title, &vehicle.Type, &vehicle.KM); err != nil {
+	if err := row.Scan(
+		&vehicle.ID,
+		&vehicle.Brand,
+		&vehicle.Model,
+		&vehicle.Year,
+		&vehicle.Version,
+		&vehicle.Engine,
+		&vehicle.Transmission,
+		&vehicle.Fuel,
+		&vehicle.KM,
+	); err != nil {
 		log.Println("Error scanning row:", err)
 		return nil, err
 	}
@@ -235,11 +310,24 @@ func (s *Store) DeleteVehicle(ctx context.Context, id int) (*Vehicle, error) {
 }
 
 func (s *Store) DeleteLogEntry(ctx context.Context, vehicleID int, logEntryID int) (*LogEntry, error) {
-	row := s.database.Executor(ctx).QueryRowContext(ctx, "DELETE FROM log_entries WHERE vehicle_id = $1 AND id = $2 RETURNING id, vehicle_id, name, type, date, km, cost", vehicleID, logEntryID)
+	row := s.database.Executor(ctx).QueryRowContext(ctx,
+		"DELETE FROM log_entries WHERE vehicle_id = $1 AND id = $2 RETURNING id, vehicle_id, name, notes, type, date, km, cost",
+		vehicleID,
+		logEntryID,
+	)
 
 	var logEntry LogEntry
 
-	if err := row.Scan(&logEntry.ID, &logEntry.VehicleID, &logEntry.Name, &logEntry.Type, &logEntry.Date, &logEntry.KM, &logEntry.Cost); err != nil {
+	if err := row.Scan(
+		&logEntry.ID,
+		&logEntry.VehicleID,
+		&logEntry.Name,
+		&logEntry.Notes,
+		&logEntry.Type,
+		&logEntry.Date,
+		&logEntry.KM,
+		&logEntry.Cost,
+	); err != nil {
 		log.Println("Error scanning row:", err)
 		return nil, err
 	}

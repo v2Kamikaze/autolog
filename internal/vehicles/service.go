@@ -19,26 +19,31 @@ func (s *Service) List(ctx context.Context) ([]*Vehicle, error) {
 
 func (s *Service) Create(ctx context.Context, input CreateVehicleParams) (*Vehicle, error) {
 	vehicle := &Vehicle{
-		Title:      input.Title,
-		Type:       input.Type,
-		KM:         input.KM,
-		LogEntries: []*LogEntry{},
+		Brand:        input.Brand,
+		Model:        input.Model,
+		Year:         input.Year,
+		Version:      input.Version,
+		Engine:       input.Engine,
+		Transmission: input.Transmission,
+		Fuel:         input.Fuel,
+		KM:           input.KM,
+		LogEntries:   []*LogEntry{},
 	}
 
-	vehicle, err := s.store.CreateVehicle(ctx, vehicle)
-	if err != nil {
-		return nil, err
-	}
-
-	return vehicle, nil
+	return s.store.CreateVehicle(ctx, vehicle)
 }
 
 func (s *Service) Edit(ctx context.Context, input EditVehicleParams) (*Vehicle, error) {
 	patch := &Vehicle{
-		ID:    input.ID,
-		Title: input.Title,
-		Type:  input.Type,
-		KM:    input.KM,
+		ID:           input.ID,
+		Brand:        input.Brand,
+		Model:        input.Model,
+		Year:         input.Year,
+		Version:      input.Version,
+		Engine:       input.Engine,
+		Transmission: input.Transmission,
+		Fuel:         input.Fuel,
+		KM:           input.KM,
 	}
 
 	return s.store.EditVehicle(ctx, patch)
@@ -60,6 +65,7 @@ func (s *Service) AddLog(ctx context.Context, input AddLogParams) (*Vehicle, *Lo
 		Date:      input.Date,
 		KM:        input.KM,
 		Cost:      input.Cost,
+		Notes:     input.Notes,
 	}
 
 	inserted, err := s.store.AddLogEntry(ctx, entry)
@@ -88,6 +94,7 @@ func (s *Service) EditLog(ctx context.Context, input EditLogParams) (*Vehicle, *
 		Date:      input.Date,
 		KM:        input.KM,
 		Cost:      input.Cost,
+		Notes:     input.Notes,
 	}
 
 	updated, err := s.store.EditLogEntry(ctx, patch)

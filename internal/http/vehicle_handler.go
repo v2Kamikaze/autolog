@@ -48,9 +48,14 @@ func (h *VehicleHandler) CreateVehicle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	vehicle, err := h.vehicles.Create(r.Context(), vehicles.CreateVehicleParams{
-		Title: form.Title,
-		Type:  form.VehicleType,
-		KM:    form.KM,
+		Brand:        form.Brand,
+		Model:        form.Model,
+		Year:         form.Year,
+		Version:      form.Version,
+		Engine:       form.Engine,
+		Transmission: vehicles.TransmissionType(form.Transmission),
+		Fuel:         vehicles.FuelType(form.Fuel),
+		KM:           form.KM,
 	})
 	if err != nil {
 		http.Error(w, "failed to create vehicle", http.StatusInternalServerError)
@@ -84,6 +89,7 @@ func (h *VehicleHandler) AddLogEntry(w http.ResponseWriter, r *http.Request) {
 	vehicle, entry, err := h.vehicles.AddLog(r.Context(), vehicles.AddLogParams{
 		VehicleID: vehicleID,
 		Name:      form.Name,
+		Notes:     form.Notes,
 		Type:      vehicles.LogEntryCategory(form.EntryType),
 		Date:      date,
 		KM:        form.KM,
@@ -128,6 +134,7 @@ func (h *VehicleHandler) EditLogEntry(w http.ResponseWriter, r *http.Request) {
 		ID:        logEntryID,
 		VehicleID: vehicleID,
 		Name:      form.Name,
+		Notes:     form.Notes,
 		Type:      vehicles.LogEntryCategory(form.EntryType),
 		Date:      date,
 		KM:        form.KM,
@@ -157,10 +164,15 @@ func (h *VehicleHandler) EditVehicle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	vehicle, err := h.vehicles.Edit(r.Context(), vehicles.EditVehicleParams{
-		ID:    vehicleID,
-		Title: form.Title,
-		Type:  form.VehicleType,
-		KM:    form.KM,
+		ID:           vehicleID,
+		Brand:        form.Brand,
+		Model:        form.Model,
+		Year:         form.Year,
+		Version:      form.Version,
+		Engine:       form.Engine,
+		Transmission: vehicles.TransmissionType(form.Transmission),
+		Fuel:         vehicles.FuelType(form.Fuel),
+		KM:           form.KM,
 	})
 	if err != nil {
 		http.Error(w, "failed to edit vehicle", http.StatusInternalServerError)
@@ -185,7 +197,13 @@ func (h *VehicleHandler) DeleteVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.ui.WriteTurbo(w, vehicles.VehicleDeletedView(vehicle)); err != nil {
+	list, err := h.vehicles.List(r.Context())
+	if err != nil {
+		http.Error(w, "failed to list vehicles", http.StatusInternalServerError)
+		return
+	}
+
+	if err := h.ui.WriteTurbo(w, vehicles.VehicleDeletedView(vehicle, len(list) == 0)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -209,7 +227,7 @@ func (h *VehicleHandler) DeleteLogEntry(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	if err := h.ui.WriteTurbo(w, vehicles.LogEntryDeletedView(vehicle, entry)); err != nil {
+	if err := h.ui.WriteTurbo(w, vehicles.LogEntryDeletedView(vehicle, entry, vehicle.LogEntryCount() == 0)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

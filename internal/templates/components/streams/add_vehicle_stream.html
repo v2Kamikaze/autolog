@@ -1,4 +1,6 @@
 {{ define "add_vehicle_stream" }}
+<turbo-stream action="remove" target="vehicles-list-empty">
+</turbo-stream>
 <turbo-stream action="append" target="vehicles-list">
   <template>
     {{ template "vehicles_list_item" .Vehicle }}

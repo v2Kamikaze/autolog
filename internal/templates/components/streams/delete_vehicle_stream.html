@@ -1,4 +1,11 @@
 {{ define "delete_vehicle_stream" }}
 <turbo-stream action="remove" target="vehicles-list-item-{{ .Vehicle.ID }}">
 </turbo-stream>
+{{ if .IsEmpty }}
+<turbo-stream action="append" target="vehicles-list">
+  <template>
+    {{ template "vehicles_list_empty" }}
+  </template>
+</turbo-stream>
+{{ end }}
 {{ end }}

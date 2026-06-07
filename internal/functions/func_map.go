@@ -1,6 +1,7 @@
 package functions
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"strings"
@@ -34,9 +35,15 @@ func FmtCurrency(cents int) string {
 	return strings.ReplaceAll(fmt.Sprintf("R$ %0.2f", float64(cents)/100), ".", ",")
 }
 
+func JsQuote(s string) string {
+	b, _ := json.Marshal(s)
+	return string(b)
+}
+
 var FuncMap = template.FuncMap{
 	"Dict":        Dict,
 	"FmtDate":     FmtDate,
 	"FmtCurrency": FmtCurrency,
 	"ToDate":      ToDate,
+	"JsQuote":     JsQuote,
 }

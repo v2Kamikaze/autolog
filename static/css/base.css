@@ -8,6 +8,9 @@
     --color-wood-light: #4c3c2d;
     --color-wood-dark: #2d241c;
 
+    --color-paper: #f4f1e8;
+    --color-paper-dark: #e6dfd1;
+
     @keyframes expand-fade-in {
         from {
             width: 0;
