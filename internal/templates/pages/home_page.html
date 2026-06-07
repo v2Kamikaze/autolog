@@ -18,13 +18,12 @@ document.addEventListener('alpine:init', () => {
         },
 
         open(data) {
-            this.isOpen = true
             this.data = data ?? {}
+            this.isOpen = true
         },
 
         close() {
             this.isOpen = false
-            this.data = {}
         },
     }))
 
