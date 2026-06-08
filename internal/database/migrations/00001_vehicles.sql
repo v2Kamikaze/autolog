@@ -1,5 +1,5 @@
 -- +goose Up
-CREATE TABLE vehicles (
+CREATE TABLE IF NOT EXISTS vehicles (
     id SERIAL PRIMARY KEY,
     brand TEXT NOT NULL DEFAULT '',
     model TEXT NOT NULL DEFAULT '',

@@ -1,5 +1,5 @@
 -- +goose Up
-CREATE TABLE log_entries (
+CREATE TABLE IF NOT EXISTS log_entries (
     id SERIAL PRIMARY KEY,
     vehicle_id INTEGER NOT NULL REFERENCES vehicles(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
