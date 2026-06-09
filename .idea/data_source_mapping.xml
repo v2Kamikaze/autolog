@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/internal/database/migrations/00001_vehicles.sql" value="9f961335-e47f-4277-91c9-5e55a5ee4f29" />
+    <file url="file://$PROJECT_DIR$/internal/database/migrations/00002_log_entries.sql" value="9f961335-e47f-4277-91c9-5e55a5ee4f29" />
+  </component>
+</project>

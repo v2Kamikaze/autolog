@@ -5,7 +5,7 @@
 <div
   id="vehicles-list-item-{{ $vehicle.ID }}"
   x-data="{ open: false }"
-  class="relative overflow-hidden border border-black/40 bg-amber-50 p-7 shadow-2xl transition duration-250 opacity-0 animate-[slide-up-fade-in_.7s_ease_500ms_forwards] odd:-rotate-1 even:rotate-1 hover:-translate-y-1 hover:rotate-0 dark:border-stone-600 dark:bg-linear-to-b dark:from-stone-900 dark:to-stone-950"
+  class="relative overflow-hidden border border-black/40 bg-amber-50 p-7 shadow-2xl transition duration-250 opacity-0 animate-[slide-up-fade-in_.7s_ease_500ms_forwards] dark:border-stone-600 dark:bg-linear-to-b dark:from-stone-900 dark:to-stone-950"
 >
   <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.03)_1px,transparent_1px)] bg-size-[3px_3px] opacity-50 dark:bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] dark:opacity-55"></div>
   <div class="pointer-events-none absolute top-0 right-0 h-14 w-14 bg-[linear-gradient(-45deg,transparent_49%,rgba(0,0,0,0.08)_50%)] dark:bg-[linear-gradient(-45deg,transparent_49%,rgba(255,255,255,0.08)_50%)]"></div>
@@ -16,7 +16,21 @@
     </h2>
 
     <p class="mt-2 text-sm tracking-[0.15em] uppercase text-neutral-500 dark:text-stone-400">
-      {{ if $vehicle.Version }}{{ $vehicle.Version }}{{ end }}{{ if $vehicle.Engine }} {{ $vehicle.Engine }}{{ end }}{{ if gt $vehicle.Year 0 }} • {{ $vehicle.Year }}{{ end }}{{ if $vehicle.Transmission }} • {{ $vehicle.Transmission.Label }}{{ end }}{{ if $vehicle.Fuel }} • {{ $vehicle.Fuel.Label }}{{ end }}
+      {{ if $vehicle.Version }}
+        {{ $vehicle.Version }}
+      {{ end }}
+      {{ if $vehicle.Engine }}
+        {{ $vehicle.Engine }}
+      {{ end }}
+      {{ if gt $vehicle.Year 0 }}
+        • {{ $vehicle.Year }}
+      {{ end }}
+      {{ if $vehicle.Transmission }}
+        • {{ $vehicle.Transmission.Label }}
+      {{ end }}
+      {{ if $vehicle.Fuel }}
+        • {{ $vehicle.Fuel.Label }}
+      {{ end }}
     </p>
 
     <div class="mt-5 border-y border-neutral-900 dark:border-stone-600">
